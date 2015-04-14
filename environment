@@ -1,0 +1,14 @@
+export TOOLCHAIN_INSTALL_DIR="/opt/pic32-toolchain"
+export PATH="$PATH:$TOOLCHAIN_INSTALL_DIR/bin"
+
+export HOST="mipsel-pic32-elf-"
+export AR=${HOST}ar
+export AS=${HOST}as
+export CC=${HOST}gcc
+export CXX=${HOST}g++
+export CPP=${HOST}cpp
+
+export LDFLAGS="-L ${TOOLCHAIN_INSTALL_DIR}/lib/proc"
+export C_INCLUDE_PATH="${TOOLCHAIN_INSTALL_DIR}/include"
+
+export PS1="[PIC32 CROSS] \u@\h:\w\$ "
