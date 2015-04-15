@@ -97,6 +97,8 @@ avrdude: build
 
 avrdude-install: avrdude installdir
 	+make -C "build/avrdude" install
+	# Must run after avrdude is installed, not before
+	install -D -m 644 avrdude.conf "$(PREFIX)/etc"
 
 bin2hex: build binutils
 	+make -C $@/
