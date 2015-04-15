@@ -1,6 +1,6 @@
 /* Default linker script, for normal executables */
-OUTPUT_FORMAT("elf32-tradlittlemips")
-OUTPUT_ARCH(pic32mx)
+OUTPUT_FORMAT("elf32-littlemips")
+OUTPUT_ARCH(mips)
 ENTRY(_reset)
 /*
  * Provide for a minimum stack and heap size
