@@ -13,8 +13,17 @@ export BUILD_MPC	= mpc-1.0.3
 export BUILD_MPFR	= mpfr-3.1.2
 export BUILD_GMP	= gmp-6.0.0
 
+## These are the URLs we should download from
+# http://ftp.gnu.org/gnu/binutils/$(BUILD_BINUTILS).tar.bz2
+# http://ftp.gnu.org/gnu/gcc/$(BUILD_GCC)/$(BUILD_GCC).tar.bz2
+# http://download.savannah.gnu.org/releases/avrdude/$(BUILD_AVRDUDE).tar.gz 
+# http://ftp.gnu.org/gnu/mpc/$(BUILD_MPC).tar.gz
+# http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP).tar.bz2
+# http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2
+
+
 # Configure options
-CONFIG_AVRDUDE	= --prefix="$(PREFIX)"
+CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-"
 
 CONFIG_BINUTILS	= --target="$(TARGET)" --prefix="$(PREFIX)" --with-float=soft \
 	--enable-soft-float --enable-static
@@ -64,6 +73,7 @@ stage2: binutils-install gcc-install avrdude-install bin2hex-install \
 	install runtime-install
 	@echo Done.
 
+
 installdir:
 	@touch "$(PREFIX)/.build" 2>/dev/null || ( \
 		echo ""; \
@@ -92,6 +102,7 @@ bin2hex: build binutils
 	+make -C $@/
 
 bin2hex-install: bin2hex installdir
+	make -C bin2hex/ install
 
 binutils: build
 	mkdir -p "build/$@"
