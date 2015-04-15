@@ -18,6 +18,9 @@ $(BUILDDIR)/$(TARGET)-bin2hex: $(BUILDDIR) $(BUILDDIR)/bin2hex.o
 install:
 	install -m 755 -t "$(PREFIX)/bin" "$(BUILDDIR)/$(TARGET)-bin2hex"
 
+install-strip:
+	install -s -m 755 -t "$(PREFIX)/bin" "$(BUILDDIR)/$(TARGET)-bin2hex"
+
 $(BUILDDIR):
 	mkdir -p $@
 
