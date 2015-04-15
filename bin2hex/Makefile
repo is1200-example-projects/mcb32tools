@@ -12,8 +12,11 @@ LIBS		+= $(SRCDIR)/../build/binutils/binutils/filemode.o
 
 CFLAGS		+= -Wall $(INCS)
 
-$(BUILDDIR)/bin2hex: $(BUILDDIR) $(BUILDDIR)/bin2hex.o
+$(BUILDDIR)/$(TARGET)-bin2hex: $(BUILDDIR) $(BUILDDIR)/bin2hex.o
 	libtool --mode=link gcc -o $@ $(BUILDDIR)/bin2hex.o $(LIBS)
+
+install:
+	install -m 755 -t "$(PREFIX)/bin" "$(BUILDDIR)/$(TARGET)-bin2hex"
 
 $(BUILDDIR):
 	mkdir -p $@
