@@ -18,8 +18,8 @@ PROVIDE(_min_heap_size = 0x800) ;
 /*************************************************************************
  * Processor-specific object file.  Contains SFR definitions.
  *************************************************************************/
-INPUT("processor.o")
-OPTIONAL("libmchp_peripheral_32MX120F032D.a") 
+INPUT("p32mx440f512l.o")
+/*OPTIONAL("libmchp_peripheral_32MX440F512H.a") */
 
 /*************************************************************************
  * Memory Regions
@@ -31,18 +31,18 @@ OPTIONAL("libmchp_peripheral_32MX120F032D.a")
 MEMORY
 {
   exception_mem              : ORIGIN = 0x9D000000, LENGTH = 0x1000
-  kseg0_program_mem    (rx)  : ORIGIN = 0x9D001000, LENGTH = 0x6000
-  kseg0_eeprom_mem           : ORIGIN = 0x9D006000, LENGTH = 0x1000
+  kseg0_program_mem    (rx)  : ORIGIN = 0x9D001000, LENGTH = 0x7E000
+  kseg0_eeprom_mem           : ORIGIN = 0x9D07F000, LENGTH = 0x1000
   kseg0_boot_mem             : ORIGIN = 0x9FC00490, LENGTH = 0
   kseg1_boot_mem             : ORIGIN = 0xBFC00000, LENGTH = 0 
-  debug_exec_mem             : ORIGIN = 0xBFC00490, LENGTH = 0
-  config3                    : ORIGIN = 0xBFC00BF0, LENGTH = 0x4
-  config2                    : ORIGIN = 0xBFC00BF4, LENGTH = 0x4
-  config1                    : ORIGIN = 0xBFC00BF8, LENGTH = 0x4
-  config0                    : ORIGIN = 0xBFC00BFC, LENGTH = 0x4
-  kseg1_data_mem       (w!x) : ORIGIN = 0xA0000000, LENGTH = 0x2000
+  debug_exec_mem             : ORIGIN = 0xBFC02000, LENGTH = 0
+  config3                    : ORIGIN = 0xBFC02FF0, LENGTH = 4 
+  config2                    : ORIGIN = 0xBFC02FF4, LENGTH = 4
+  config1                    : ORIGIN = 0xBFC02FF8, LENGTH = 4
+  config0                    : ORIGIN = 0xBFC02FFC, LENGTH = 4
+  kseg1_data_mem       (w!x) : ORIGIN = 0xA0000000, LENGTH = 0x8000
   sfrs                       : ORIGIN = 0xBF800000, LENGTH = 0x100000
-  configsfrs                 : ORIGIN = 0xBFC00BF0, LENGTH = 0x10
+  configsfrs                 : ORIGIN = 0xBFC02FF0, LENGTH = 0x10
 }
 
 /*************************************************************************
@@ -132,4 +132,4 @@ SECTIONS
 }
 
 /* From here out every linker script is the same, so just include it */
-/*INCLUDE "chipKIT-application-COMMON.ld"*/
+INCLUDE "p32mx-common.ld"

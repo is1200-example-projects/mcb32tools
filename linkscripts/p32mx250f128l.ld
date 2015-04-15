@@ -18,8 +18,8 @@ PROVIDE(_min_heap_size = 0x800) ;
 /*************************************************************************
  * Processor-specific object file.  Contains SFR definitions.
  *************************************************************************/
-INPUT("processor.o")
-OPTIONAL("libmchp_peripheral_32MX250F128D.a") 
+INPUT("p32mx250f128l.o")
+/*OPTIONAL("libmchp_peripheral_32MX250F128D.a") */
 
 /*************************************************************************
  * Memory Regions
@@ -133,4 +133,4 @@ SECTIONS
 }
 
 /* From here out every linker script is the same, so just include it */
-/*INCLUDE "chipKIT-application-COMMON.ld"*/
+INCLUDE "p32mx-common.ld"
