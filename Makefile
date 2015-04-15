@@ -13,14 +13,26 @@ export BUILD_MPC	= mpc-1.0.3
 export BUILD_MPFR	= mpfr-3.1.2
 export BUILD_GMP	= gmp-6.0.0
 
-## These are the URLs we should download from
-# http://ftp.gnu.org/gnu/binutils/$(BUILD_BINUTILS).tar.bz2
-# http://ftp.gnu.org/gnu/gcc/$(BUILD_GCC)/$(BUILD_GCC).tar.bz2
-# http://download.savannah.gnu.org/releases/avrdude/$(BUILD_AVRDUDE).tar.gz 
-# http://ftp.gnu.org/gnu/mpc/$(BUILD_MPC).tar.gz
-# http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP).tar.bz2
-# http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2
+# These are the URLs we should download from
+URLS 		= \
+	http://download.savannah.gnu.org/releases/avrdude/$(BUILD_AVRDUDE).tar.gz \
+	http://ftp.gnu.org/gnu/binutils/$(BUILD_BINUTILS).tar.bz2 \
+	http://ftp.gnu.org/gnu/gcc/$(BUILD_GCC)/$(BUILD_GCC).tar.bz2 \
+	http://ftp.gnu.org/gnu/mpc/$(BUILD_MPC).tar.gz \
+	http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP)a.tar.bz2 \
+	http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2
 
+# Packages that should be downloaded
+DOWNLOADS	= \
+	downloads/$(BUILD_AVRDUDE) \
+	downloads/$(BUILD_BINUTILS) \
+	downloads/$(BUILD_GCC) \
+	downloads/$(BUILD_MPC) \
+	downloads/$(BUILD_MPFR) \
+	downloads/$(BUILD_GMP)
+
+# Tar flags for different archive formats
+TARFORMATS = z.gz j.bz2 J.xz
 
 # Configure options
 CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-"
@@ -34,13 +46,13 @@ CONFIG_GCC	= --target="$(TARGET)" --prefix="$(PREFIX)" \
 	--with-arch=mips32r2 --disable-multilib
 
 CONFIG_MPC	= --prefix="$(PREFIX)" --enable-shared=no \
-	--with-gmp-include="../../download/$(BUILD_GMP)/src" \
+	--with-gmp-include="../../downloads/$(BUILD_GMP)/src" \
 	--with-gmp-lib="../../gmp/.libs" \
-	--with-mpfr-include="../../download/$(BUILD_MPFR)/src" \
+	--with-mpfr-include="../../downloads/$(BUILD_MPFR)/src" \
 	--with-mpfr-lib="../../mpfr/src/.libs"
 
 CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no \
-	--with-gmp-include="../../download/$(BUILD_GMP)/src" \
+	--with-gmp-include="../../downloads/$(BUILD_GMP)/src" \
 	--with-gmp-lib="../../gmp/.libs"
 
 CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no
@@ -54,9 +66,9 @@ GCCDEPS		=
 ifeq ($(STATIC), true)
 CONFIG_GCC	+= --with-mpc-include="../../$(BUILD_MPC)/src" \
 	--with-mpc-lib="../../mpc/src/.libs" \
-	--with-gmp-include="../../download/$(BUILD_GMP)/src" \
+	--with-gmp-include="../../downloads/$(BUILD_GMP)/src" \
 	--with-gmp-lib="../../gmp/.libs" \
-	--with-mpfr-include="../../download/$(BUILD_MPFR)/src" \
+	--with-mpfr-include="../../downloads/$(BUILD_MPFR)/src" \
 	--with-mpfr-lib="../../mpfr/src/.libs"
 
 GCCDEPS		+= gmp mpfr mpc
@@ -90,9 +102,9 @@ installdir:
 build:
 	mkdir -p "$@"
 
-avrdude: build
+avrdude: build downloads/$(BUILD_AVRDUDE)
 	mkdir -p "build/$@"
-	(cd "build/$@"; "../../download/$(BUILD_AVRDUDE)/configure" $(CONFIG_AVRDUDE))
+	(cd "build/$@"; "../../downloads/$(BUILD_AVRDUDE)/configure" $(CONFIG_AVRDUDE))
 	+make -C "build/$@"
 
 avrdude-install: avrdude installdir
@@ -104,33 +116,33 @@ bin2hex: build binutils
 bin2hex-install: bin2hex installdir
 	make -C bin2hex/ install-strip
 
-binutils: build
+binutils: build downloads/$(BUILD_BINUTILS)
 	mkdir -p "build/$@"
-	(cd "build/$@"; "../../download/$(BUILD_BINUTILS)/configure" $(CONFIG_BINUTILS))
+	(cd "build/$@"; "../../downloads/$(BUILD_BINUTILS)/configure" $(CONFIG_BINUTILS))
 	+make -C "build/$@"
 
 binutils-install: installdir binutils
 	+make -C "build/binutils" install-strip
 
 
-gmp: build
+gmp: build downloads/$(BUILD_GMP)
 	mkdir -p "build/$@"
-	(cd "build/$@"; "../../download/$(BUILD_GMP)/configure" $(CONFIG_GMP))
+	(cd "build/$@"; "../../downloads/$(BUILD_GMP)/configure" $(CONFIG_GMP))
 	+make -C "build/$@"
 
-mpfr: build gmp
+mpfr: build gmp downloads/$(BUILD_MPFR)
 	mkdir -p "build/$@"
-	(cd "build/$@"; "../../download/$(BUILD_MPFR)/configure" $(CONFIG_MPFR))
+	(cd "build/$@"; "../../downloads/$(BUILD_MPFR)/configure" $(CONFIG_MPFR))
 	+make -C "build/$@"
 
-mpc: build gmp mpfr
+mpc: build gmp mpfr downloads/$(BUILD_MPC)
 	mkdir -p "build/$@"
-	(cd "build/$@"; "../../download/$(BUILD_MPC)/configure" $(CONFIG_MPC))
+	(cd "build/$@"; "../../downloads/$(BUILD_MPC)/configure" $(CONFIG_MPC))
 	+make -C "build/$@"
 
-gcc: build binutils-install $(GCCDEPS)
+gcc: build binutils-install $(GCCDEPS) downloads/$(BUILD_GCC)
 	mkdir -p "build/$@"
-	(cd "build/$@"; "../../download/$(BUILD_GCC)/configure" $(CONFIG_GCC))
+	(cd "build/$@"; "../../downloads/$(BUILD_GCC)/configure" $(CONFIG_GCC))
 	+make -C "build/$@" all-gcc
 	+make -C "build/$@" all-target-libgcc
 
@@ -156,6 +168,16 @@ runtime-install: installdir runtime
 environment: build
 	sed "s/TOOLCHAIN_INSTALL_DIR=.*$$/TOOLCHAIN_INSTALL_DIR="$$(echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')"/"\
 		< environment > build/environment
+
+download: $(DOWNLOADS)
+
+downloads:
+	mkdir -p "$@"
+
+downloads/%: downloads
+	$(eval URL = $(strip $(foreach v,$(URLS),$(if $(findstring $*,$v),$v))))
+	$(eval TARFLAG = $(basename $(filter %$(suffix $(URL)),$(TARFORMATS))))
+	@(cd downloads; test -d "$*" || wget -O - "$(URL)" | tar x$(TARFLAG))
 
 install: installdir processors environment
 	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
