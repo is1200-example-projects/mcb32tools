@@ -64,7 +64,7 @@ endif
 
 .PHONY: all stage2 gcc gcc-install binutils binutils-install avrdude \
 	gmp mpc mpfr avrdude-install bin2hex bin2hex-install installdir \
-	processors runtime install clean
+	processors runtime environment install clean
 
 all: installdir
 	+make stage2
@@ -96,7 +96,7 @@ avrdude: build
 	+make -C "build/$@"
 
 avrdude-install: avrdude installdir
-	+make -C "build/avrdude" install
+	+make -C "build/avrdude" install-strip
 	# Must run after avrdude is installed, not before
 	install -D -m 644 avrdude.conf "$(PREFIX)/etc"
 
@@ -104,7 +104,7 @@ bin2hex: build binutils
 	+make -C $@/
 
 bin2hex-install: bin2hex installdir
-	make -C bin2hex/ install
+	make -C bin2hex/ install-strip
 
 binutils: build
 	mkdir -p "build/$@"
@@ -112,7 +112,7 @@ binutils: build
 	+make -C "build/$@"
 
 binutils-install: installdir binutils
-	+make -C "build/binutils" install
+	+make -C "build/binutils" install-strip
 
 
 gmp: build
@@ -137,7 +137,7 @@ gcc: build binutils-install $(GCCDEPS)
 	+make -C "build/$@" all-target-libgcc
 
 gcc-install: gcc installdir
-	+make -C "build/gcc" install-gcc
+	+make -C "build/gcc" install-strip-gcc
 	+make -C "build/gcc" install-target-libgcc
 
 processors: build binutils-install
@@ -155,10 +155,15 @@ runtime-install: installdir runtime
 	+make -C "runtime/crt0" install
 	+make -C "runtime/crtprep" install
 
-install: installdir processors
+environment: build
+	sed "s/TOOLCHAIN_INSTALL_DIR=.*$$/TOOLCHAIN_INSTALL_DIR="$$(echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')"/"\
+		< environment > build/environment
+
+install: installdir processors environment
 	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
 	(cd build; find lib -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
 	install -D -m 644 environment "$(PREFIX)"
+	install -D -m 644 build/environment "$(PREFIX)"
 
 clean:
 	$(RM) -R "build"

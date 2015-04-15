@@ -8,7 +8,7 @@ ASFLAGS		= -msoft-float
 all: $(OBJFILES)
 
 install:
-	install -D -m 644 $(OBJFILES) $(PREFIX)/lib/gcc/$(TARGET)/*/
+	install -t "$(PREFIX)/lib/gcc/$(TARGET)/"*/ -m 644 $(OBJFILES)
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
