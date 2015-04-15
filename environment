@@ -12,6 +12,8 @@ export CC=${TARGET}gcc
 export CXX=${TARGET}g++
 export CPP=${TARGET}cpp
 
+export ASFLAGS="-march=mips32r2 -msoft-float"
+export CFLAGS="-march=mips32r2 -msoft-float"
 export LDFLAGS="-L ${TOOLCHAIN_INSTALL_DIR}/lib/proc"
 export C_INCLUDE_PATH="${TOOLCHAIN_INSTALL_DIR}/include"
 
