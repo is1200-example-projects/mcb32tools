@@ -109,6 +109,8 @@ avrdude: build downloads/$(BUILD_AVRDUDE)
 
 avrdude-install: avrdude installdir
 	+make -C "build/avrdude" install-strip
+	# Must run after avrdude is installed, not before
+	install -D -m 644 avrdude.conf "$(PREFIX)/etc"
 
 bin2hex: build binutils
 	+make -C $@/
@@ -182,6 +184,7 @@ downloads/%: downloads
 install: installdir processors environment
 	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
 	(cd build; find lib -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
+	install -D -m 644 environment "$(PREFIX)"
 	install -D -m 644 build/environment "$(PREFIX)"
 
 clean:

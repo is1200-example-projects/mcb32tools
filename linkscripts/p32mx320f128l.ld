@@ -1,6 +1,6 @@
 /* Default linker script, for normal executables */
-OUTPUT_FORMAT("elf32-tradlittlemips")
-OUTPUT_ARCH(pic32mx)
+OUTPUT_FORMAT("elf32-littlemips")
+OUTPUT_ARCH(mips)
 ENTRY(_reset)
 /*
  * Provide for a minimum stack and heap size
@@ -18,8 +18,7 @@ PROVIDE(_min_heap_size = 0x800) ;
 /*************************************************************************
  * Processor-specific object file.  Contains SFR definitions.
  *************************************************************************/
-INPUT("processor.o")
-OPTIONAL("libmchp_peripheral_32MX440F256H.a") 
+INPUT("p32mx320f128l.o")
 
 /*************************************************************************
  * Memory Regions
@@ -31,8 +30,8 @@ OPTIONAL("libmchp_peripheral_32MX440F256H.a")
 MEMORY
 {
   exception_mem              : ORIGIN = 0x9D000000, LENGTH = 0x1000
-  kseg0_program_mem    (rx)  : ORIGIN = 0x9D001000, LENGTH = 0x3E000
-  kseg0_eeprom_mem           : ORIGIN = 0x9D03F000, LENGTH = 0x1000
+  kseg0_program_mem    (rx)  : ORIGIN = 0x9D001000, LENGTH = 0x1E000
+  kseg0_eeprom_mem           : ORIGIN = 0x9D01F000, LENGTH = 0x1000
   kseg0_boot_mem             : ORIGIN = 0x9FC00490, LENGTH = 0
   kseg1_boot_mem             : ORIGIN = 0xBFC00000, LENGTH = 0 
   debug_exec_mem             : ORIGIN = 0xBFC02000, LENGTH = 0
@@ -40,7 +39,7 @@ MEMORY
   config2                    : ORIGIN = 0xBFC02FF4, LENGTH = 4
   config1                    : ORIGIN = 0xBFC02FF8, LENGTH = 4
   config0                    : ORIGIN = 0xBFC02FFC, LENGTH = 4
-  kseg1_data_mem       (w!x) : ORIGIN = 0xA0000000, LENGTH = 0x8000
+  kseg1_data_mem       (w!x) : ORIGIN = 0xA0000000, LENGTH = 0x4000
   sfrs                       : ORIGIN = 0xBF800000, LENGTH = 0x100000
   configsfrs                 : ORIGIN = 0xBFC02FF0, LENGTH = 0x10
 }
@@ -132,4 +131,4 @@ SECTIONS
 }
 
 /* From here out every linker script is the same, so just include it */
-/*INCLUDE "chipKIT-application-COMMON.ld"*/
+INCLUDE "p32mx-common.ld"

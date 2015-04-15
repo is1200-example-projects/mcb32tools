@@ -18,8 +18,8 @@ PROVIDE(_min_heap_size = 0x800) ;
 /*************************************************************************
  * Processor-specific object file.  Contains SFR definitions.
  *************************************************************************/
-INPUT("processor.o")
-OPTIONAL("libmchp_peripheral_32MX360F512L.a") 
+INPUT("p32mx440f256h.o")
+/*OPTIONAL("libmchp_peripheral_32MX440F256H.a") */
 
 /*************************************************************************
  * Memory Regions
@@ -31,8 +31,8 @@ OPTIONAL("libmchp_peripheral_32MX360F512L.a")
 MEMORY
 {
   exception_mem              : ORIGIN = 0x9D000000, LENGTH = 0x1000
-  kseg0_program_mem    (rx)  : ORIGIN = 0x9D001000, LENGTH = 0x7E000
-  kseg0_eeprom_mem           : ORIGIN = 0x9D07F000, LENGTH = 0x1000
+  kseg0_program_mem    (rx)  : ORIGIN = 0x9D001000, LENGTH = 0x3E000
+  kseg0_eeprom_mem           : ORIGIN = 0x9D03F000, LENGTH = 0x1000
   kseg0_boot_mem             : ORIGIN = 0x9FC00490, LENGTH = 0
   kseg1_boot_mem             : ORIGIN = 0xBFC00000, LENGTH = 0 
   debug_exec_mem             : ORIGIN = 0xBFC02000, LENGTH = 0
@@ -132,4 +132,4 @@ SECTIONS
 }
 
 /* From here out every linker script is the same, so just include it */
-/*INCLUDE "chipKIT-application-COMMON.ld"*/
+INCLUDE "p32mx-common.ld"
