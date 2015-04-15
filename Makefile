@@ -55,7 +55,7 @@ endif
 
 .PHONY: all stage2 gcc gcc-install binutils binutils-install avrdude \
 	gmp mpc mpfr avrdude-install bin2hex bin2hex-install installdir \
-	processors runtime install clean
+	processors runtime environment install clean
 
 all: installdir
 	+make stage2
@@ -138,14 +138,19 @@ runtime: build binutils-install gcc-install processors
 	+make -C "runtime/crt0"
 	+make -C "runtime/crtprep"
 	
-runtime-install: installdir runtime
+runtime-install: installdir
+	#runtime
 	+make -C "runtime/crt0" install
 	+make -C "runtime/crtprep" install
 
-install: installdir processors
+environment: build
+	sed "s/TOOLCHAIN_INSTALL_DIR=.*$$/TOOLCHAIN_INSTALL_DIR="$$(echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')"/"\
+		< environment > build/environment
+
+install: installdir processors environment
 	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
 	(cd build; find lib -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
-	install -D -m 644 environment "$(PREFIX)"
+	install -D -m 644 build/environment "$(PREFIX)"
 
 clean:
 	$(RM) -R "build"

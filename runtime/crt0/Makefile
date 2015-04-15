@@ -17,7 +17,7 @@ CPPFLAGS	= -I"$(PREFIX)/include"
 all: $(BUILDDIR)/crt0.o
 
 install:
-	install -D -m 644 -T $(BUILDDIR)/crt0.o $(PREFIX)/lib/gcc/$(TARGET)/*/
+	install -m 644 -t "$(PREFIX)/lib/gcc/$(TARGET)/"*/ "$(BUILDDIR)/crt0.o"
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
