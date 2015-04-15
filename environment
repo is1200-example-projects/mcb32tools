@@ -1,14 +1,18 @@
 export TOOLCHAIN_INSTALL_DIR="/opt/pic32-toolchain"
-export PATH="$PATH:$TOOLCHAIN_INSTALL_DIR/bin"
+target=mipsel-pic32-elf-
 
-export HOST="mipsel-pic32-elf-"
-export AR=${HOST}ar
-export AS=${HOST}as
-export CC=${HOST}gcc
-export CXX=${HOST}g++
-export CPP=${HOST}cpp
+echo "$PATH" | grep "$TOOLCHAIN_INSTALL_DIR/bin" > /dev/null || export PATH="$PATH:$TOOLCHAIN_INSTALL_DIR/bin"
+
+[ "$TARGET" == "$target" ] || export PS1="[`echo -e '\e[32mPIC32 CROSS\e[0m'`] $PS1"
+
+export TARGET="$target"
+export AR=${TARGET}ar
+export AS=${TARGET}as
+export CC=${TARGET}gcc
+export CXX=${TARGET}g++
+export CPP=${TARGET}cpp
 
 export LDFLAGS="-L ${TOOLCHAIN_INSTALL_DIR}/lib/proc"
 export C_INCLUDE_PATH="${TOOLCHAIN_INSTALL_DIR}/include"
 
-export PS1="[PIC32 CROSS] \u@\h:\w\$ "
+unset target
