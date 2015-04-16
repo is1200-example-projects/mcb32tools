@@ -34,6 +34,17 @@ DOWNLOADS	= \
 # Tar flags for different archive formats
 TARFORMATS = z.gz j.bz2 J.xz
 
+# Detemine what downloader to use
+ifneq (,$(DOWNLOADER))
+else ifneq (,$(shell wget -V))
+	DOWNLOADER = wget -O -
+else ifneq (,$(shell curl -V))
+	DOWNLOADER = curl -L
+else
+	$(error No downloader found. Please install wget or curl and re-run)
+endif
+
+
 # Configure options
 CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-"
 
@@ -182,7 +193,7 @@ downloads:
 downloads/%: downloads
 	$(eval URL = $(strip $(foreach v,$(URLS),$(if $(findstring $*,$v),$v))))
 	$(eval TARFLAG = $(basename $(filter %$(suffix $(URL)),$(TARFORMATS))))
-	@(cd downloads; test -d "$*" || wget -O - "$(URL)" | tar x$(TARFLAG))
+	@(cd downloads; test -d "$*" || $(DOWNLOADER) "$(URL)" | tar x$(TARFLAG))
 
 install: installdir processors environment
 	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
