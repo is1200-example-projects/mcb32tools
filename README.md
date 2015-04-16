@@ -32,8 +32,9 @@ commands to fix the problem.
 It is recommended that you build with at least as many threads as your CPU supports in
 hardware, but at most 50% more. Otherwise it may take a long time or your system may
 become overloaded. If you have 4 hardware threads, run make with `make -j6`, this will
-use 6 threads. If you build on an SSD or RAM disk, 4 threads may be enough. Also note that
-there is no space between `-j` and the number. Insering a space inbetween will build with **all**
+use 6 threads to compensate for I/O wait. If you build on an SSD or RAM disk, 
+4 threads may be enough. Also note that there is no space between `-j`
+and the number. Insering a space inbetween will build with **all**
 the threads, which will bring down your system to the out of memory killer.
 
 ### If a build fails
