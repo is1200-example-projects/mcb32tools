@@ -1,6 +1,10 @@
 export TARGET	= mipsel-pic32-elf
 export PREFIX	= /opt/pic32-toolchain
 
+DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
+DISTRIB_WINDOWS_NAME	= $(PWD)/pic32-toolchain.zip
+DISTRIB_MACOS_NAME	= $(PWD)/pic32-toolchain.dmg
+
 # Build GCC against static GMP, MPFR, MPC
 STATIC		= true
 
@@ -214,6 +218,13 @@ install: installdir processors environment
 	(cd build; find lib -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
 	install -D -m 644 environment "$(PREFIX)"
 	install -D -m 644 build/environment "$(PREFIX)"
+
+distrib-linux:
+	rm -f $(DISTRIB_LINUX_NAME)
+	install -m 644 -t "$(PREFIX)/" doc/install-linux.txt
+	cd `dirname $(PREFIX)` && tar -cjf $(DISTRIB_LINUX_NAME) `basename $(PREFIX)`
+	
+	
 
 clean:
 	$(RM) -R "build"
