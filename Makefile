@@ -12,6 +12,7 @@ export BUILD_BIN2HEX	= bin2hex
 export BUILD_MPC	= mpc-1.0.3
 export BUILD_MPFR	= mpfr-3.1.2
 export BUILD_GMP	= gmp-6.0.0
+export BUILD_MAKE	= make-4.1
 
 # These are the URLs we should download from
 URLS 		= \
@@ -20,7 +21,8 @@ URLS 		= \
 	http://ftp.gnu.org/gnu/gcc/$(BUILD_GCC)/$(BUILD_GCC).tar.bz2 \
 	http://ftp.gnu.org/gnu/mpc/$(BUILD_MPC).tar.gz \
 	http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP)a.tar.bz2 \
-	http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2
+	http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2 \
+	http://ftp.gnu.org/gnu/make/$(BUILD_MAKE).tar.bz2
 
 # Packages that should be downloaded
 DOWNLOADS	= \
@@ -29,7 +31,8 @@ DOWNLOADS	= \
 	downloads/$(BUILD_GCC) \
 	downloads/$(BUILD_MPC) \
 	downloads/$(BUILD_MPFR) \
-	downloads/$(BUILD_GMP)
+	downloads/$(BUILD_GMP) \
+	downloads/$(BUILD_MAKE)
 
 # Tar flags for different archive formats
 TARFORMATS = z.gz j.bz2 J.xz
@@ -68,6 +71,8 @@ CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no \
 
 CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no
 
+CONFIG_MAKE	= --prefix="$(PREFIX)"
+
 # Microsoft Windows and Mac OS X require static build
 ifeq ($(strip $(OS)), Windows_NT)
 STATIC		= true
@@ -87,13 +92,14 @@ endif
 
 .PHONY: all stage2 gcc gcc-install binutils binutils-install avrdude \
 	gmp mpc mpfr avrdude-install bin2hex bin2hex-install installdir \
+	make make-install \
 	processors runtime environment install clean
 
 all: installdir
 	+make stage2
 
 stage2: binutils-install gcc-install avrdude-install bin2hex-install \
-	install runtime-install
+	install runtime-install make-install
 	@echo Done.
 
 
@@ -120,8 +126,16 @@ avrdude: build downloads/$(BUILD_AVRDUDE)
 
 avrdude-install: avrdude installdir
 	+make -C "build/avrdude" install-strip
-	# Must run after avrdude is installed, not before
+	@# Must run after avrdude is installed, not before
 	install -D -m 644 avrdude.conf "$(PREFIX)/etc"
+
+make: build downloads/$(BUILD_MAKE)
+	mkdir -p "build/$@"
+	(cd "build/$@"; "../../downloads/$(BUILD_MAKE)/configure" $(CONFIG_MAKE))
+	+make -C "build/$@"
+
+make-install: make installdir
+	+make -C "build/make" install-strip
 
 bin2hex: build binutils
 	+make -C $@/
