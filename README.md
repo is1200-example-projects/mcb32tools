@@ -20,7 +20,8 @@ the `PREFIX` variable. The `PREFIX` variable declaration can be found at the top
 root makefile, located at the root of this repository.
 
 Before you can start building the toolchain, you need to create this directory and make
-sure it's writable. Do this with `mkdir -p <install path>` and `chown <your user> <install path`.
+sure it's writable. Do this with `sudo mkdir -p <install path>` and 
+`sudo chown <your user> <install path>`.
 
 When you've done that, cd into the toolchain repository and run `make`.
 If you created the installation folder correctly, the source code will be downloaded and
