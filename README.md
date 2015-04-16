@@ -39,3 +39,11 @@ the threads, which will bring down your system to the out of memory killer.
 If the build process is aborted while running, you may have the build tree in a bad
 state. It is recommended that you run `make clean`, remove the `downloads` directory
 and start over.
+
+## Currently implemented hacks
+### libgmp
+At the time this toolchain was pieced together, the latest version available
+was 6.0.0a, it does however extract to 6.0.0. As a crude hack, an "a" is appended to the
+URL in the list of URLs. If you wish to update the version of libgmp, you probably
+need to remove this stray 'a'. You can find the list of URLs near the top of the
+root makefile.
