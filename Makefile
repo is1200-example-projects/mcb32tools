@@ -1,5 +1,5 @@
 export TARGET	= mipsel-pic32-elf
-export PREFIX	= /tmp/pic32-toolchain
+export PREFIX	= /opt/pic32-toolchain
 
 # Build GCC against static GMP, MPFR, MPC
 STATIC		= true
