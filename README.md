@@ -35,4 +35,7 @@ use 6 threads. If you build on an SSD or RAM disk, 4 threads may be enough. Also
 there is no space between `-j` and the number. Insering a space inbetween will build with **all**
 the threads, which will bring down your system to the out of memory killer.
 
-### When 
+### If a build fails
+If the build process is aborted while running, you may have the build tree in a bad
+state. It is recommended that you run `make clean`, remove the `downloads` directory
+and start over.
