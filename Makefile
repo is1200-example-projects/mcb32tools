@@ -46,14 +46,14 @@ CONFIG_GCC	= --target="$(TARGET)" --prefix="$(PREFIX)" \
 	--with-arch=mips32r2 --disable-multilib
 
 CONFIG_MPC	= --prefix="$(PREFIX)" --enable-shared=no \
-	--with-gmp-include="../../downloads/$(BUILD_GMP)/src" \
-	--with-gmp-lib="../../gmp/.libs" \
-	--with-mpfr-include="../../downloads/$(BUILD_MPFR)/src" \
-	--with-mpfr-lib="../../mpfr/src/.libs"
+	--with-gmp-include="$(PREFIX)/include" \
+	--with-gmp-lib="$(PREFIX)/lib" \
+	--with-mpfr-include="$(PREFIX)/include" \
+	--with-mpfr-lib="$(PREFIX)/lib"
 
 CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no \
-	--with-gmp-include="../../downloads/$(BUILD_GMP)/src" \
-	--with-gmp-lib="../../gmp/.libs"
+	--with-gmp-include="$(PREFIX)/include" \
+	--with-gmp-lib="$(PREFIX)/lib"
 
 CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no
 
@@ -64,12 +64,12 @@ endif
 
 GCCDEPS		=
 ifeq ($(STATIC), true)
-CONFIG_GCC	+= --with-mpc-include="../../$(BUILD_MPC)/src" \
-	--with-mpc-lib="../../mpc/src/.libs" \
-	--with-gmp-include="../../downloads/$(BUILD_GMP)/src" \
-	--with-gmp-lib="../../gmp/.libs" \
-	--with-mpfr-include="../../downloads/$(BUILD_MPFR)/src" \
-	--with-mpfr-lib="../../mpfr/src/.libs"
+CONFIG_GCC	+= --with-mpc-include="$(PREFIX)/include" \
+	--with-mpc-lib="$(PREFIX)/lib" \
+	--with-gmp-include="$(PREFIX)/include" \
+	--with-gmp-lib="$(PREFIX)/lib" \
+	--with-mpfr-include="$(PREFIX)/include" \
+	--with-mpfr-lib="$(PREFIX)/lib"
 
 GCCDEPS		+= gmp mpfr mpc
 endif
@@ -131,16 +131,19 @@ gmp: build downloads/$(BUILD_GMP)
 	mkdir -p "build/$@"
 	(cd "build/$@"; "../../downloads/$(BUILD_GMP)/configure" $(CONFIG_GMP))
 	+make -C "build/$@"
+	+make -C "build/$@" install
 
 mpfr: build gmp downloads/$(BUILD_MPFR)
 	mkdir -p "build/$@"
 	(cd "build/$@"; "../../downloads/$(BUILD_MPFR)/configure" $(CONFIG_MPFR))
 	+make -C "build/$@"
+	+make -C "build/$@" install
 
 mpc: build gmp mpfr downloads/$(BUILD_MPC)
 	mkdir -p "build/$@"
 	(cd "build/$@"; "../../downloads/$(BUILD_MPC)/configure" $(CONFIG_MPC))
 	+make -C "build/$@"
+	+make -C "build/$@" install
 
 gcc: build binutils-install $(GCCDEPS) downloads/$(BUILD_GCC)
 	mkdir -p "build/$@"
