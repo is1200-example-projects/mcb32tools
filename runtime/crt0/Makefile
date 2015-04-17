@@ -8,17 +8,17 @@ CPP=$$(PREFIX)/bin/(TARGET)-cpp
 
 CFLAGS		= -I"$(PREFIX)/include" -ffreestanding -march=mips32r2 \
 	-Wa,-march=mips32r2 -D__32MX320F128H__ -Wa,-msoft-float -Wall \
-	-D__NEWLIB__
+	-D__NEWLIB__ -msoft-float
 
 CPPFLAGS	= -I"$(PREFIX)/include"
-ASFLAGS = -march=mips32r2
+ASFLAGS = -march=mips32r2 -msoft-float
 
 .PHONY: all install
 
 all: $(BUILDDIR)/crt0.o
 
 install:
-	install -m 644 -t "$(PREFIX)/lib/gcc/$(TARGET)/"*/ "$(BUILDDIR)/crt0.o"
+	install -m 644 "$(BUILDDIR)/crt0.o" "$(wildcard $(PREFIX)/lib/gcc/$(TARGET)/*)/crt0.o"
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
