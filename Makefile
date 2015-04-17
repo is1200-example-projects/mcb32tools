@@ -1,6 +1,5 @@
 export TARGET	= mipsel-pic32-elf
 export PREFIX	= /tmp/pic32-toolchain
-export BUILD	= x86_64-pc-linux-gnu
 
 DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
 DISTRIB_WINDOWS_NAME	= $(PWD)/pic32-toolchain.zip
@@ -58,31 +57,30 @@ endif
 
 
 # Configure options
-CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-" \
-	--build=$(BUILD)
+CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-"
 
 CONFIG_BINUTILS	= --target="$(TARGET)" --prefix="$(PREFIX)" --with-float=soft \
-	--enable-soft-float --enable-static --build=$(BUILD)
+	--enable-soft-float --enable-static
 
 CONFIG_GCC	= --target="$(TARGET)" --prefix="$(PREFIX)" \
 	--enable-languages=c,c++ --with-newlib --with-gnu-as --with-gnu-ld \
 	--without-headers --disable-libssp --with-float=soft \
-	--with-arch=mips32r2 --disable-multilib --build=$(BUILD)
+	--with-arch=mips32r2 --disable-multilib
 
-CONFIG_MPC	= --prefix="$(PREFIX)" --enable-shared=no --build=$(BUILD) \
+CONFIG_MPC	= --prefix="$(PREFIX)" --enable-shared=no \
 	--with-gmp-include="$(PREFIX)/include" \
 	--with-gmp-lib="$(PREFIX)/lib" \
 	--with-mpfr-include="$(PREFIX)/include" \
 	--with-mpfr-lib="$(PREFIX)/lib"
 
-CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no --build=$(BUILD) \
+CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no \
 	--with-gmp-include="$(PREFIX)/include" \
 	--with-gmp-lib="$(PREFIX)/lib"
 
-CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no --build=$(BUILD) \
+CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no \
 	--disable-assembly
 
-CONFIG_MAKE	= --prefix="$(PREFIX)" --build=$(BUILD)
+CONFIG_MAKE	= --prefix="$(PREFIX)"
 
 # Microsoft Windows and Mac OS X require static build
 #ifeq ($(strip $(OS)), Windows_NT)
