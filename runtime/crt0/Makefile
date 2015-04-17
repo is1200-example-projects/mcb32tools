@@ -11,6 +11,7 @@ CFLAGS		= -I"$(PREFIX)/include" -ffreestanding -march=mips32r2 \
 	-D__NEWLIB__
 
 CPPFLAGS	= -I"$(PREFIX)/include"
+ASFLAGS = -march=mips32r2
 
 .PHONY: all install
 
@@ -22,5 +23,6 @@ install:
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
-$(BUILDDIR)/%.o: %.s $(BUILDDIR)
-	$(CC) $(CFLAGS) -c -o $@ $<
+$(BUILDDIR)/%.o: %.S $(BUILDDIR)
+	$(CC) -E $(CFLAGS) -c -o "$(@D)/$(F).gen.s" "$<"
+	$(AS) $(ASFLAGS) -o "$@" "$(@D)/$(F).gen.s"

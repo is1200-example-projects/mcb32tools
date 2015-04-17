@@ -1,12 +1,13 @@
 export TARGET	= mipsel-pic32-elf
-export PREFIX	= /opt/pic32-toolchain
+export PREFIX	= /tmp/pic32-toolchain
+export BUILD	= x86_64-pc-linux-gnu
 
 DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
 DISTRIB_WINDOWS_NAME	= $(PWD)/pic32-toolchain.zip
 DISTRIB_MACOS_NAME	= $(PWD)/pic32-toolchain.dmg
 
 # Build GCC against static GMP, MPFR, MPC
-STATIC		= true
+STATIC			= true
 
 # Versions
 export BUILD_AVRDUDE	= avrdude-5.11
@@ -41,6 +42,10 @@ DOWNLOADS	= \
 # Tar flags for different archive formats
 TARFORMATS = z.gz j.bz2 J.xz
 
+# New config.guess and config.sub
+CONFIG_GUESS_URL	= "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD"
+CONFIG_SUB_URL		= "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD"
+
 # Detemine what downloader to use
 ifneq (,$(DOWNLOADER))
 else ifneq (,$(shell wget -V))
@@ -53,34 +58,36 @@ endif
 
 
 # Configure options
-CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-"
+CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-" \
+	--build=$(BUILD)
 
 CONFIG_BINUTILS	= --target="$(TARGET)" --prefix="$(PREFIX)" --with-float=soft \
-	--enable-soft-float --enable-static
+	--enable-soft-float --enable-static --build=$(BUILD)
 
 CONFIG_GCC	= --target="$(TARGET)" --prefix="$(PREFIX)" \
 	--enable-languages=c,c++ --with-newlib --with-gnu-as --with-gnu-ld \
 	--without-headers --disable-libssp --with-float=soft \
-	--with-arch=mips32r2 --disable-multilib
+	--with-arch=mips32r2 --disable-multilib --build=$(BUILD)
 
-CONFIG_MPC	= --prefix="$(PREFIX)" --enable-shared=no \
+CONFIG_MPC	= --prefix="$(PREFIX)" --enable-shared=no --build=$(BUILD) \
 	--with-gmp-include="$(PREFIX)/include" \
 	--with-gmp-lib="$(PREFIX)/lib" \
 	--with-mpfr-include="$(PREFIX)/include" \
 	--with-mpfr-lib="$(PREFIX)/lib"
 
-CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no \
+CONFIG_MPFR	= --prefix="$(PREFIX)" --enable-shared=no --build=$(BUILD) \
 	--with-gmp-include="$(PREFIX)/include" \
 	--with-gmp-lib="$(PREFIX)/lib"
 
-CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no
+CONFIG_GMP	= --prefix="$(PREFIX)" --enable-shared=no --build=$(BUILD) \
+	--disable-assembly
 
-CONFIG_MAKE	= --prefix="$(PREFIX)"
+CONFIG_MAKE	= --prefix="$(PREFIX)" --build=$(BUILD)
 
 # Microsoft Windows and Mac OS X require static build
-ifeq ($(strip $(OS)), Windows_NT)
-STATIC		= true
-endif
+#ifeq ($(strip $(OS)), Windows_NT)
+#STATIC		= true
+#endif
 
 GCCDEPS		=
 ifeq ($(STATIC), true)
@@ -103,7 +110,7 @@ all: installdir
 	+make stage2
 
 stage2: binutils-install gcc-install avrdude-install bin2hex-install \
-	install runtime-install make-install
+	install runtime-install
 	@echo Done.
 
 
@@ -123,9 +130,13 @@ installdir:
 build:
 	mkdir -p "$@"
 
-avrdude: build downloads/$(BUILD_AVRDUDE)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_AVRDUDE)/configure" $(CONFIG_AVRDUDE))
+build/avrdude/config.status: downloads/$(BUILD_AVRDUDE) | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_AVRDUDE)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_AVRDUDE)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_AVRDUDE)/configure" $(CONFIG_AVRDUDE))
+
+avrdude: build/avrdude/config.status
 	+make -C "build/$@"
 
 avrdude-install: avrdude installdir
@@ -133,9 +144,13 @@ avrdude-install: avrdude installdir
 	@# Must run after avrdude is installed, not before
 	install -D -m 644 avrdude.conf "$(PREFIX)/etc"
 
-make: build downloads/$(BUILD_MAKE)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_MAKE)/configure" $(CONFIG_MAKE))
+build/make/config.status: downloads/$(BUILD_MAKE) | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_MAKEA)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_MAKE)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_MAKE)/configure" $(CONFIG_MAKE))
+
+make: build/make/config.status
 	+make -C "build/$@"
 
 make-install: make installdir
@@ -147,36 +162,55 @@ bin2hex: build binutils
 bin2hex-install: bin2hex installdir
 	make -C bin2hex/ install-strip
 
-binutils: build downloads/$(BUILD_BINUTILS)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_BINUTILS)/configure" $(CONFIG_BINUTILS))
+build/binutils/config.status: downloads/$(BUILD_BINUTILS) | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_BINUTILS)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_BINUTILS)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_BINUTILS)/configure" $(CONFIG_BINUTILS))
+
+binutils: build/binutils/config.status
 	+make -C "build/$@"
 
 binutils-install: installdir binutils
 	+make -C "build/binutils" install-strip
 
+build/gmp/config.status: downloads/$(BUILD_GMP) | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_GMP)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_GMP)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_GMP)/configure" $(CONFIG_GMP))
 
-gmp: build downloads/$(BUILD_GMP)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_GMP)/configure" $(CONFIG_GMP))
+gmp: build/gmp/config.status
 	+make -C "build/$@"
 	+make -C "build/$@" install
 
-mpfr: build gmp downloads/$(BUILD_MPFR)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_MPFR)/configure" $(CONFIG_MPFR))
+build/mpfr/config.status: downloads/$(BUILD_MPFR) gmp | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_MPFR)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_MPFR)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_MPFR)/configure" $(CONFIG_MPFR))
+
+mpfr: build/mpfr/config.status
 	+make -C "build/$@"
 	+make -C "build/$@" install
 
-mpc: build gmp mpfr downloads/$(BUILD_MPC)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_MPC)/configure" $(CONFIG_MPC))
+build/mpc/config.status: downloads/$(BUILD_MPC) gmp mpfr | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_MPC)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_MPC)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_MPC)/configure" $(CONFIG_MPC))
+
+mpc: build/mpc/config.status
 	+make -C "build/$@"
 	+make -C "build/$@" install
 
-gcc: build binutils-install $(GCCDEPS) downloads/$(BUILD_GCC)
-	mkdir -p "build/$@"
-	(cd "build/$@"; "../../downloads/$(BUILD_GCC)/configure" $(CONFIG_GCC))
+build/gcc/config.status: downloads/$(BUILD_GCC) binutils-install $(GCCDEPS) | build build/config.sub build/config.guess
+	mkdir -p "$(@D)"
+	cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
+	(cd "$(@D)"; "../../downloads/$(BUILD_GCC)/configure" $(CONFIG_GCC))
+
+gcc: build/gcc/config.status
 	+make -C "build/$@" all-gcc
 	+make -C "build/$@" all-target-libgcc
 
@@ -184,14 +218,14 @@ gcc-install: gcc installdir
 	+make -C "build/gcc" install-strip-gcc
 	+make -C "build/gcc" install-target-libgcc
 
-processors: build binutils-install
+processors: binutils-install | build
 	mkdir -p build/lib/proc
 	mkdir -p build/include
 	+make -C "processors"
 	cp linkscripts/*.ld build/lib/proc/
 	cp -r headers/* build/include/
 
-runtime: build binutils-install gcc-install processors
+runtime: binutils-install gcc-install processors | build
 	+make -C "runtime/crt0"
 	+make -C "runtime/crtprep"
 	
@@ -208,10 +242,16 @@ download: $(DOWNLOADS)
 downloads:
 	mkdir -p "$@"
 
-downloads/%: downloads
+downloads/%: | downloads
 	$(eval URL = $(strip $(foreach v,$(URLS),$(if $(findstring $*,$v),$v))))
 	$(eval TARFLAG = $(basename $(filter %$(suffix $(URL)),$(TARFORMATS))))
 	@(cd downloads; test -d "$*" || $(DOWNLOADER) "$(URL)" | tar x$(TARFLAG))
+
+build/config.guess: | build
+	$(DOWNLOADER) $(CONFIG_GUESS_URL) > "$@"
+
+build/config.sub: | build
+	$(DOWNLOADER) $(CONFIG_SUB_URL) > "$@"
 
 install: installdir processors environment
 	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
@@ -223,8 +263,6 @@ distrib-linux:
 	rm -f $(DISTRIB_LINUX_NAME)
 	install -m 644 -t "$(PREFIX)/" doc/install-linux.txt
 	cd `dirname $(PREFIX)` && tar -cjf $(DISTRIB_LINUX_NAME) `basename $(PREFIX)`
-	
-	
 
 clean:
 	$(RM) -R "build"
