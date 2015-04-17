@@ -131,7 +131,7 @@ avrdude: build downloads/$(BUILD_AVRDUDE)
 avrdude-install: avrdude installdir
 	+make -C "build/avrdude" install-strip
 	@# Must run after avrdude is installed, not before
-	install -D -m 644 avrdude.conf "$(PREFIX)/etc"
+	install -m 644 avrdude.conf "$(PREFIX)/etc"
 
 make: build downloads/$(BUILD_MAKE)
 	mkdir -p "build/$@"
@@ -214,10 +214,14 @@ downloads/%: downloads
 	@(cd downloads; test -d "$*" || $(DOWNLOADER) "$(URL)" | tar x$(TARFLAG))
 
 install: installdir processors environment
-	(cd build; find include -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
-	(cd build; find lib -type f -exec install -D -T -m 644 {} "$(PREFIX)/{}" \;)
-	install -D -m 644 environment "$(PREFIX)"
-	install -D -m 644 build/environment "$(PREFIX)"
+	install -d $(PREFIX)/include/proc
+	install -d $(PREFIX)/include/sys
+	install -d $(PREFIX)/lib/proc
+	(cd build; find include/proc -type f -exec install -m 644 {} "$(PREFIX)/include/proc" \;)
+	(cd build; find include/sys -type f -exec install -m 644 {} "$(PREFIX)/include/sys" \;)
+	install -m 644 "build/include/cp0defs.h" "$(PREFIX)/include"
+	(cd build; find lib -type f -exec install -m 644 {} "$(PREFIX)/lib/proc" \;)
+	install -m 644 build/environment "$(PREFIX)/environment"
 
 distrib-linux:
 	rm -f $(DISTRIB_LINUX_NAME)
