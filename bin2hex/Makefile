@@ -8,7 +8,7 @@ INCS		+= -I$(SRCDIR)/../build/binutils/binutils
 INCS		+= -I$(SRCDIR)/../downloads/$(BUILD_BINUTILS)/binutils
 LIBS		+= $(wildcard $(SRCDIR)/../build/binutils/bfd/*.o)
 LIBS		+= $(wildcard $(SRCDIR)/../build/binutils/libiberty/*.o)
-LIBS		+= $(wildcard $(SRCDIR)/../build/binutils/libintl/*.o)
+LIBS		+= $(wildcard $(SRCDIR)/../build/binutils/intl/*.o)
 LIBS		+= $(SRCDIR)/../build/binutils/binutils/bucomm.o
 LIBS		+= $(SRCDIR)/../build/binutils/binutils/filemode.o
 
