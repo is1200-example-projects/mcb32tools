@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "bucomm.h"
 #include "libiberty.h"
 
