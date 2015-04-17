@@ -4,7 +4,7 @@ AR=$(PREFIX)/bin/$(TARGET)-ar
 AS=$(PREFIX)/bin/$(TARGET)-as
 CC=$(PREFIX)/bin/$(TARGET)-gcc
 CXX=$(PREFIX)/bin/$(TARGET)-g++
-CPP=$$(PREFIX)/bin/(TARGET)-cpp
+CPP=$(PREFIX)/bin/(TARGET)-cpp
 
 CFLAGS		= -I"$(PREFIX)/include" -ffreestanding -march=mips32r2 \
 	-Wa,-march=mips32r2 -D__32MX320F128H__ -Wa,-msoft-float -Wall \

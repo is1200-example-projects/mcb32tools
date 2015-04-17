@@ -13,16 +13,14 @@ LIBS		+= $(SRCDIR)/../build/binutils/binutils/bucomm.o
 LIBS		+= $(SRCDIR)/../build/binutils/binutils/filemode.o
 
 CFLAGS		= -Wall $(INCS)
-LDFLAGS		= -ldl -lz
+LDFLAGS		= -ldl
 
 ## Detect Mac OSX
-ifeq ($(OS),Windows_NT)
-	UNAME_S = Windows
-else
-	UNAME_S := $(shell uname -s)
+ifneq ($(OS),Windows_NT)
+	LDFLAGS += -lz
 endif
 
-ifeq ($(UNAME_S),Darwin)
+ifeq ($(shell uname -s),Darwin)
 	LDFLAGS += -liconv
 endif
 
