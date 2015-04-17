@@ -2,7 +2,7 @@ SRCDIR		= $(shell pwd)
 BUILDDIR	= ../build/bin2hex
 
 INCS		+= -I$(SRCDIR)/../build/binutils/bfd
-INCS		+= -I$(SRCDIR)/../build/binutils/libintl
+INCS		+= -I$(SRCDIR)/../build/binutils/intl
 INCS		+= -I$(SRCDIR)/../downloads/$(BUILD_BINUTILS)/include
 INCS		+= -I$(SRCDIR)/../build/binutils/binutils
 INCS		+= -I$(SRCDIR)/../downloads/$(BUILD_BINUTILS)/binutils
