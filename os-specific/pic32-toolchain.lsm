@@ -1,0 +1,13 @@
+Begin3
+Title:          pic32-toolchain
+Version:        1.0
+Description:    Cross compiling toolchain for Microchip Pic32 devices.
+		Contains gcc, binutils, a couple of other tools, as well
+		as development headers and processor definitions.
+Keywords:       pic32 toolchain cross-compiler gcc
+Author:         Several authors
+Maintained-by:  Axel Isaksson (axelis@kth.se), Steven Arnow (stevena@kth.se)
+Original-site:  https://github.com/is1200-example-projects/pic32-toolchain
+Platform:       Unix
+Copying-policy: GPL
+End
