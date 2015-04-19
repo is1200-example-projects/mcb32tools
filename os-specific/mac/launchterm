@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. /etc/profile
+. "$HOME/.profile"
+. "$HOME/.bashrc"
+
+## TODO: Make this use actual prefix
+. /Applications/pic32mx-toolchain.app/Contents/Resources/Toolchain/environment
