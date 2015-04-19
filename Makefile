@@ -1,5 +1,5 @@
 export TARGET	= mipsel-pic32-elf
-export PREFIX	= /tmp/pic32-toolchain
+export PREFIX	= /opt/pic32-toolchain
 
 DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
 DISTRIB_WINDOWS_NAME	= $(PWD)/pic32-toolchain.zip
@@ -235,7 +235,7 @@ environment: build
 	sed "s/TOOLCHAIN_INSTALL_DIR=.*$$/TOOLCHAIN_INSTALL_DIR="$$(echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')"/"\
 		< environment > build/environment
 
-download: $(DOWNLOADS)
+download: $(DOWNLOADS) | build/config.sub build/config.guess
 
 downloads:
 	mkdir -p "$@"
@@ -247,9 +247,11 @@ downloads/%: | downloads
 
 build/config.guess: | build
 	$(DOWNLOADER) $(CONFIG_GUESS_URL) > "$@"
+	chmod 755 "$@"
 
 build/config.sub: | build
 	$(DOWNLOADER) $(CONFIG_SUB_URL) > "$@"
+	chmod 755 "$@"
 
 install: installdir processors environment
 	install -d $(PREFIX)/include/proc
@@ -260,11 +262,18 @@ install: installdir processors environment
 	install -m 644 "build/include/cp0defs.h" "$(PREFIX)/include"
 	(cd build; find lib -type f -exec install -m 644 {} "$(PREFIX)/lib/proc" \;)
 	install -m 644 build/environment "$(PREFIX)/environment"
+	sed 's/\$$PREFIX/$(shell echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')/' \
+		< os-specific/install-complete > build/install-complete
+	install -m 755 build/install-complete "$(PREFIX)/install-complete"
 
 distrib-linux:
 	rm -f $(DISTRIB_LINUX_NAME)
 	install -m 644 -t "$(PREFIX)/" doc/install-linux.txt
 	cd `dirname $(PREFIX)` && tar -cjf $(DISTRIB_LINUX_NAME) `basename $(PREFIX)`
+
+release:
+	makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
+		"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "Pic32 Toolchain" ./install-complete
 
 clean:
 	$(RM) -R "build"
