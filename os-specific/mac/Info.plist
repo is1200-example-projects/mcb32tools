@@ -2,7 +2,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>pic32mx-toolchain-launch</string>
+	<string>pic32-toolchain-launch</string>
 	<key>CFBundleIdentifier</key>
 	<string>local.csc.pic32mx.toolchain</string>
 	<key>CFBundlePackageType</key>
@@ -14,7 +14,7 @@
 	<key>CFBundleName</key>
 	<string>p32mx-tc</string>
 	<key>CFBundleDisplayName</key>
-	<string>PIC32MX-Toolchain</string>
+	<string>PIC32 Toolchain</string>
 	<key>CFBundleVersion</key>
 	<string>1231</string>
 	<key>NSPrincipalClass</key>
