@@ -306,7 +306,7 @@ install-mac-app: installdir
 	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
 		< os-specific/mac/pic32-toolchain-launch.c > build/pic32-toolchain-launch.c
 	$(CC) -DMAC_APP_PATH=\"$(MAC_APP_PATH)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
-	install -d "$(PREFIX_DATA_ROOT)/Resources/en.lproj
+	install -d "$(PREFIX_DATA_ROOT)/Resources/en.lproj"
 
 clean:
 	$(RM) -R "build"
