@@ -284,18 +284,19 @@ distrib-linux:
 	cd `dirname $(PREFIX)` && tar -cjf $(DISTRIB_LINUX_NAME) `basename $(PREFIX)`
 
 release:
-	makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
-		"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
-
-dmg: | build
-	mkdir build/dmg
-	cp -r "$(MAC_APP_PATH)" build/dmg/
-	ln -s /Applications/ build/dmg/
-	mkdir build/dmg/.meta
-	cp os-specific/mac/background.png build/dmg/.meta/
-	cp os-specific/mac/DS_Store build/dmg/.DS_Store
-	hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -volname "PIC32 Toolchain" -srcfolder build/dmg
-	
+	ifneq ($(shell uname -s),Darwin)
+		## We're NOT building on OSX
+		makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
+			"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
+	else
+		mkdir build/dmg
+		cp -r "$(MAC_APP_PATH)" build/dmg/
+		ln -s /Applications/ build/dmg/
+		mkdir build/dmg/.meta
+		cp os-specific/mac/background.png build/dmg/.meta/
+		cp os-specific/mac/DS_Store build/dmg/.DS_Store
+		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -volname "PIC32 Toolchain" -srcfolder build/dmg
+	endif
 
 install-mac-app: installdir
 	install -d "$(PREFIX_DATA_ROOT)/MacOS"
@@ -305,12 +306,7 @@ install-mac-app: installdir
 	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
 		< os-specific/mac/pic32-toolchain-launch.c > build/pic32-toolchain-launch.c
 	$(CC) -DMAC_APP_PATH=\"$(MAC_APP_PATH)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
-	sed 's/\$$PREFIX/$(shell echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')/' \
-		< os-specific/mac/terminit > build/terminit
-	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
-		< os-specific/mac/launchterm > build/launchterm
-	install -m 755 "build/terminit" "$(PREFIX_DATA_ROOT)/MacOS"
-	install -m 755 "build/launchterm" "$(PREFIX_DATA_ROOT)/MacOS"
+	install -d "$(PREFIX_DATA_ROOT)/Resources/en.lproj
 
 clean:
 	$(RM) -R "build"

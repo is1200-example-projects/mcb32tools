@@ -1,3 +1,0 @@
-#!/bin/bash
-
-bash --init-file $PREFIX_DATA_ROOT/MacOS/terminit
