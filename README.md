@@ -36,6 +36,10 @@ use 6 threads to compensate for I/O wait. If you build on an SSD or RAM disk,
 and the number. Insering a space inbetween will build with **all**
 the threads, which will bring down your system to the out of memory killer.
 
+After the build completes, the toolchain is installed on your system. To make
+a self extracting package suitable for binary distribution, run `make release`.
+A self extracting tarball will be placed in the root directory of the repository.
+
 ### If a build fails
 If the build process is aborted while running, you may have the build tree in a bad
 state. It is recommended that you run `make clean`, remove the `downloads` directory
@@ -77,6 +81,11 @@ recommended is 1.5 × the number of processor cores.
 Note that the build process will automatically download some source code
 packages from the internet, hence a working internet connection is required.
 
+After the build completes, the toolchain is installed on your system. To make
+a self extracting package suitable for binary distribution, run `make release`.
+A self extracting tarball will be placed in the root directory of the repository.
+This self extracting tarball is to be run under MSYS2.
+
 ### If a build fails
 If the build process is aborted while running, you may have the build tree in a bad
 state. It is recommended that you run `make clean`, remove the `downloads` directory
@@ -92,6 +101,7 @@ The source code can then be built as usual with `make` or `make -j8`
 ## Building on MacOS Ẍ́
 Building the toolchain on MacOS X will create an application bundle with
 a launcher that automatically sources the cross compiler environment.
+
 ### Prerequisites
 You need to have Xcode installed to build the toolchain. Building the toolchain
 has been tested on MacOS 10.10.2 and 10.10.3, however it should work on earlier
