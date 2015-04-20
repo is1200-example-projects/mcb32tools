@@ -1,6 +1,5 @@
 # Pic32MX toolchain
 
-
 ## Building on Ubuntu 14.04
 ### Prerequisites
 Apart from the base system install, a number of additional packages are required to
@@ -16,7 +15,7 @@ First, you need to configure the target installation directory of the toolchain.
 Since GCC and many other programs hard-code their installation location, choose wisely,
 as any binary distribution will need to be unpacked in the exact same path.
 The path name `/opt/pic32-toolchain` is suggested. This path is configured using
-the `PREFIX` variable. The `PREFIX` variable declaration can be found at the top of the
+the `INSTALL_DIR` variable. The `INSTALL_DIR` variable declaration can be found at the top of the
 root makefile, located at the root of this repository.
 
 Before you can start building the toolchain, you need to create this directory and make
@@ -66,7 +65,7 @@ Download the toolchain source code and cd to its directory:
 Determine the prefix to use for the toolchain. This path is hard-coded into
 the binaries, and is the path used in the final toolchain distribution.
 The default and recommended is to use `/opt/pic32-toolchain` . To change
-this, edit the `PREFIX` variable at the top of the Makefile.
+this, edit the `INSTALL_DIR` variable at the top of the Makefile.
 
 The prefix directory must be created manually before the build can start.
 If your prefix is the default one, use the command `mkdir /opt/pic32-toolchain`
@@ -89,6 +88,43 @@ The source code can be downloaded prior to the building of the toolchain.
 This allows for the toolchain to be built without a working internet connection.
 To download the required source code, issue the command `make download` .
 The source code can then be built as usual with `make` or `make -j8`
+
+## Building on MacOS Ẍ́
+Building the toolchain on MacOS X will create an application bundle with
+a launcher that automatically sources the cross compiler environment.
+### Prerequisites
+You need to have Xcode installed to build the toolchain. Building the toolchain
+has been tested on MacOS 10.10.2 and 10.10.3, however it should work on earlier
+and future versions as well.
+
+You will also need about 3 GB of available disk space.
+
+### Starting the build process
+First, you may configure the file name of the app by setting the `INSTALL_DIR`
+variable at the top of the root makefile, the variable specific for Mac OS 
+(as indicated by comments.) A default of `/Applications/pic32-toolchain.app` is used,
+and it is recommended that it is not changed.
+
+Before starting the building process, you need to create the install directory first.
+Do this with `sudo mkdir -p <install path>` and  `sudo chown <your user> <install path>`.
+
+To start building the toolchain, run `make -jN` where N is the number of threads to build
+with, **without** space between the number and the `-j`. A number of threads 1.5 times
+the amount of hardware cores in your system is a recommended value to compensate for
+blocking I/O while not completely overloading your system. If in doubt, don't pass
+the `-jN` parameter at all, or use a sane number (usually less than 10).
+
+After you've started `make`, the source code archives will be downloaded
+automatically and the build process starting. To avoid issues with the caching in finder,
+avoid navigating the applications folder in Finder before the build is finished, or
+it may get bad data about executable or icon cached on your machine. This will not
+affect binary distribution, only your own local installation.
+
+If make finished without any errors, you should now have a working toolchain in your
+Applications folder. For making a release suitable for distribution, run
+`make release` and a disk image with the app will be created in the root directory
+of the repo.
+
 
 ## Currently implemented hacks
 ### libgmp
