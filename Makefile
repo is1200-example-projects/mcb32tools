@@ -4,7 +4,7 @@ ifneq ($(shell uname -s),Darwin)
 	export PREFIX	= /opt/pic32-toolchain
 else
 	# This defines where the application bundle will be built in MacOS X
-	export MAC_APP_PATH = /Applications/pic32mx-toolchain.app
+	export MAC_APP_PATH = /Applications/pic32-toolchain.app
 endif
 
 DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
@@ -217,8 +217,8 @@ mpc: build/mpc/config.status
 
 build/gcc/config.status: downloads/$(BUILD_GCC) binutils-install $(GCCDEPS) | build build/config.sub build/config.guess
 	mkdir -p "$(@D)"
-	cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
-	cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
+	#cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
+	#cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
 	(cd "$(@D)"; "../../downloads/$(BUILD_GCC)/configure" $(CONFIG_GCC))
 
 gcc: build/gcc/config.status
@@ -286,7 +286,17 @@ distrib-linux:
 
 release:
 	makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
-		"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "Pic32 Toolchain" ./install-complete
+		"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
+
+dmg: | build
+	mkdir build/dmg
+	cp -r "$(MAC_APP_PATH)" build/dmg/
+	ln -s /Applications/ build/dmg/
+	mkdir build/dmg/.meta
+	cp os-specific/mac/background.png build/dmg/.meta/
+	cp os-specific/mac/DS_Store build/dmg/.DS_Store
+	hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -volname "PIC32 Toolchain" -srcfolder build/dmg
+	
 
 install-mac-app: installdir
 	install -d "$(PREFIX_DATA_ROOT)/MacOS"
