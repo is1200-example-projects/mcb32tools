@@ -95,7 +95,8 @@ state. It is recommended that you run `make clean`, remove the `downloads` direc
 and start over. If you know for certain that only a particular download failed,
 delete only the failed directory in the downloads directory.
 
-If make fails in 32 bit MSYS2: run autorebase.bat in the MSYS2 install directory.
+If make fails in 32 bit MSYS2: Close MSYS2 and run autorebase.bat in the MSYS2
+install directory.
 
 ### Optional: Pre-download the source code
 The source code can be downloaded prior to the building of the toolchain.
