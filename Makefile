@@ -1,5 +1,11 @@
 export TARGET	= mipsel-pic32-elf
-export PREFIX	= /opt/pic32-toolchain
+ifneq ($(shell uname -s),Darwin)
+	# This defines install location for platforms that are *not* MacOS X
+	export PREFIX	= /opt/pic32-toolchain
+else
+	# This defines where the application bundle will be built in MacOS X
+	export MAC_APP_PATH = /Applications/pic32mx-toolchain.app
+endif
 
 DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
 DISTRIB_WINDOWS_NAME	= $(PWD)/pic32-toolchain.zip
@@ -55,6 +61,13 @@ else
 	$(error No downloader found. Please install wget or curl and re-run)
 endif
 
+## Must not be moved below first usage of $(PREFIX)!
+ifeq ($(shell uname -s),Darwin)
+	export PREFIX_DATA_ROOT = $(MAC_APP_PATH)/Contents
+	export PREFIX = $(MAC_APP_PATH)/Contents/Resources/Toolchain
+	EXTRA_INSTALL_TARGETS += install-mac-app
+endif
+
 
 # Configure options
 CONFIG_AVRDUDE	= --prefix="$(PREFIX)" --program-prefix="$(TARGET)-"
@@ -108,7 +121,7 @@ all: installdir
 	+make stage2
 
 stage2: binutils-install gcc-install avrdude-install bin2hex-install \
-	install runtime-install
+	install runtime-install $(EXTRA_INSTALL_TARGETS)
 	@echo Done.
 
 
@@ -254,9 +267,9 @@ build/config.sub: | build
 	chmod 755 "$@"
 
 install: installdir processors environment
-	install -d $(PREFIX)/include/proc
-	install -d $(PREFIX)/include/sys
-	install -d $(PREFIX)/lib/proc
+	install -d "$(PREFIX)/include/proc"
+	install -d "$(PREFIX)/include/sys"
+	install -d "$(PREFIX)/lib/proc"
 	(cd build; find include/proc -type f -exec install -m 644 {} "$(PREFIX)/include/proc" \;)
 	(cd build; find include/sys -type f -exec install -m 644 {} "$(PREFIX)/include/sys" \;)
 	install -m 644 "build/include/cp0defs.h" "$(PREFIX)/include"
@@ -274,6 +287,14 @@ distrib-linux:
 release:
 	makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
 		"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "Pic32 Toolchain" ./install-complete
+
+install-mac-app: installdir
+	install -d "$(PREFIX_DATA_ROOT)/MacOS"
+	install -m 644 "os-specific/mac/Info.plist" "$(PREFIX_DATA_ROOT)/"
+	iconutil -o "$(PREFIX_DATA_ROOT)/Resources/toolchain.icns" -c icns "os-specific/mac/toolchain.iconset"
+	@## TODO: Set the path correctly in launchterm
+	$(CC) "os-specific/mac/pic32mx-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32mx-toolchain-launch"
+	install -m 755 "os-specific/mac/launchterm" "$(PREFIX_DATA_ROOT)/MacOS"
 
 clean:
 	$(RM) -R "build"
