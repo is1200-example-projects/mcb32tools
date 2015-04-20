@@ -1,15 +1,11 @@
 export TARGET	= mipsel-pic32-elf
 ifneq ($(shell uname -s),Darwin)
 	# This defines install location for platforms that are *not* MacOS X
-	export PREFIX	= /opt/pic32-toolchain
+	export INSTALL_DIR	= /opt/pic32-toolchain
 else
 	# This defines where the application bundle will be built in MacOS X
-	export MAC_APP_PATH = /Applications/pic32-toolchain.app
+	export INSTALL_DIR	= /Applications/pic32-toolchain.app
 endif
-
-DISTRIB_LINUX_NAME	= $(PWD)/pic32-toolchain.tar.bz2
-DISTRIB_WINDOWS_NAME	= $(PWD)/pic32-toolchain.zip
-DISTRIB_MACOS_NAME	= $(PWD)/pic32-toolchain.dmg
 
 # Build GCC against static GMP, MPFR, MPC
 STATIC			= true
@@ -63,9 +59,11 @@ endif
 
 ## Must not be moved below first usage of $(PREFIX)!
 ifeq ($(shell uname -s),Darwin)
-	export PREFIX_DATA_ROOT = $(MAC_APP_PATH)/Contents
-	export PREFIX = $(MAC_APP_PATH)/Contents/Resources/Toolchain
+	export PREFIX_DATA_ROOT = $(INSTALL_DIR)/Contents
+	export PREFIX = $(INSTALL_DIR)/Contents/Resources/Toolchain
 	EXTRA_INSTALL_TARGETS += install-mac-app
+else
+	export PREFIX = $(INSTALL_DIR)
 endif
 
 
@@ -126,13 +124,14 @@ stage2: binutils-install gcc-install avrdude-install bin2hex-install \
 
 
 installdir:
+	@-mkdir -p "$(PREFIX)" 2>/dev/null
 	@touch "$(PREFIX)/.build" 2>/dev/null || ( \
 		echo ""; \
 		echo "************************************************************************"; \
-		echo "$(PREFIX) directory must exist and be writeable by your user."; \
+		echo "$(INSTALL_DIR) directory must exist and be writeable by your user."; \
 		echo "Please run the following commands before continuing:"; \
-		echo "	sudo mkdir $(PREFIX)"; \
-		echo "	sudo chown `id -un`:`id -gn` $(PREFIX)"; \
+		echo "	sudo mkdir -p $(INSTALL_DIR)"; \
+		echo "	sudo chown -R `id -un`:`id -gn` $(INSTALL_DIR)"; \
 		echo "************************************************************************"; \
 		echo ""; \
 		echo ""; \
