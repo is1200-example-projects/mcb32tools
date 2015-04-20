@@ -61,7 +61,7 @@ endif
 ifeq ($(shell uname -s),Darwin)
 	export PREFIX_DATA_ROOT = $(INSTALL_DIR)/Contents
 	export PREFIX = $(INSTALL_DIR)/Contents/Resources/Toolchain
-	EXTRA_INSTALL_TARGETS += install-mac-app
+	EXTRA_INSTALL_TARGETS += install-mac-app make-install
 else
 	export PREFIX = $(INSTALL_DIR)
 endif
@@ -112,8 +112,8 @@ endif
 
 .PHONY: all stage2 gcc gcc-install binutils binutils-install avrdude \
 	gmp mpc mpfr avrdude-install bin2hex bin2hex-install installdir \
-	make make-install \
-	processors runtime environment install clean
+	make make-install install-mac-app \
+	processors runtime environment install release clean
 
 all: installdir
 	+make stage2
