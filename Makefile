@@ -293,8 +293,15 @@ install-mac-app: installdir
 	install -m 644 "os-specific/mac/Info.plist" "$(PREFIX_DATA_ROOT)/"
 	iconutil -o "$(PREFIX_DATA_ROOT)/Resources/toolchain.icns" -c icns "os-specific/mac/toolchain.iconset"
 	@## TODO: Set the path correctly in launchterm
-	$(CC) "os-specific/mac/pic32mx-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32mx-toolchain-launch"
-	install -m 755 "os-specific/mac/launchterm" "$(PREFIX_DATA_ROOT)/MacOS"
+	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
+		< os-specific/mac/pic32-toolchain-launch.c > build/pic32-toolchain-launch.c
+	$(CC) -DMAC_APP_PATH=\"$(MAC_APP_PATH)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
+	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
+		< os-specific/mac/terminit > build/terminit
+	sed 's/\$$PREFIX/$(shell echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')/' \
+		< os-specific/mac/launchterm > build/launchterm
+	install -m 755 "build/terminit" "$(PREFIX_DATA_ROOT)/MacOS"
+	install -m 755 "build/launchterm" "$(PREFIX_DATA_ROOT)/MacOS"
 
 clean:
 	$(RM) -R "build"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. /etc/profile 2>/dev/null
+. "$HOME/.profile" 2>/dev/null
+. "$HOME/.bashrc" 2>/dev/null
+
+## TODO: Make this use actual prefix
+. $PREFIX/environment
