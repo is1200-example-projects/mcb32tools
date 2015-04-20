@@ -283,20 +283,21 @@ distrib-linux:
 	install -m 644 -t "$(PREFIX)/" doc/install-linux.txt
 	cd `dirname $(PREFIX)` && tar -cjf $(DISTRIB_LINUX_NAME) `basename $(PREFIX)`
 
+ifneq ($(shell uname -s),Darwin)
 release:
-	ifneq ($(shell uname -s),Darwin)
 		## We're NOT building on OSX
 		makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
 			"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
-	else
-		mkdir build/dmg
-		cp -r "$(MAC_APP_PATH)" build/dmg/
+else
+release:
+		mkdir -p build/dmg
+		cp -r "$(INSTALL_DIR)" build/dmg/
 		ln -s /Applications/ build/dmg/
 		mkdir build/dmg/.meta
 		cp os-specific/mac/background.png build/dmg/.meta/
 		cp os-specific/mac/DS_Store build/dmg/.DS_Store
 		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -volname "PIC32 Toolchain" -srcfolder build/dmg
-	endif
+endif
 
 install-mac-app: installdir
 	install -d "$(PREFIX_DATA_ROOT)/MacOS"
@@ -305,7 +306,7 @@ install-mac-app: installdir
 	@## TODO: Set the path correctly in launchterm
 	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
 		< os-specific/mac/pic32-toolchain-launch.c > build/pic32-toolchain-launch.c
-	$(CC) -DMAC_APP_PATH=\"$(MAC_APP_PATH)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
+	$(CC) -DMAC_APP_PATH=\"$(INSTALL_DIR)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
 	install -d "$(PREFIX_DATA_ROOT)/Resources/en.lproj"
 
 clean:
