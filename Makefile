@@ -156,7 +156,7 @@ avrdude-install: avrdude installdir
 
 build/make/config.status: downloads/$(BUILD_MAKE) | build build/config.sub build/config.guess
 	mkdir -p "$(@D)"
-	cp -f build/config.sub downloads/$(BUILD_MAKEA)/config.sub
+	cp -f build/config.sub downloads/$(BUILD_MAKE)/config.sub
 	cp -f build/config.guess downloads/$(BUILD_MAKE)/config.guess
 	(cd "$(@D)"; "../../downloads/$(BUILD_MAKE)/configure" $(CONFIG_MAKE))
 
@@ -216,8 +216,8 @@ mpc: build/mpc/config.status
 
 build/gcc/config.status: downloads/$(BUILD_GCC) binutils-install $(GCCDEPS) | build build/config.sub build/config.guess
 	mkdir -p "$(@D)"
-	#cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
-	#cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
+	cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
 	(cd "$(@D)"; "../../downloads/$(BUILD_GCC)/configure" $(CONFIG_GCC))
 
 gcc: build/gcc/config.status
