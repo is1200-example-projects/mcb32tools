@@ -290,13 +290,14 @@ release:
 			"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
 else
 release:
+		rm -rf build/dmg
 		mkdir -p build/dmg
 		cp -r "$(INSTALL_DIR)" build/dmg/
 		ln -s /Applications/ build/dmg/
 		mkdir build/dmg/.meta
 		cp os-specific/mac/background.png build/dmg/.meta/
 		cp os-specific/mac/DS_Store build/dmg/.DS_Store
-		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -volname "PIC32 Toolchain" -srcfolder build/dmg
+		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -format UDBZ -volname "PIC32 Toolchain" -srcfolder build/dmg
 endif
 
 install-mac-app: installdir
