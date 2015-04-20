@@ -15,9 +15,9 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
-	return system("osascript << EOF
-			tell application \"Terminal\"
-				do script \". '$PREFIX_DATA_ROOT/Resources/Toolchain/environment'\"
-			end tell
-			EOF");
+	return system("osascript << EOF\n"
+			"tell application \"Terminal\"\n"
+			"	do script \". '$PREFIX_DATA_ROOT/Resources/Toolchain/environment'\"\n"
+			"end tell\n"
+			"EOF\n");
 }
