@@ -306,9 +306,9 @@ install-mac-app: installdir
 	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
 		< os-specific/mac/pic32-toolchain-launch.c > build/pic32-toolchain-launch.c
 	$(CC) -DMAC_APP_PATH=\"$(MAC_APP_PATH)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
-	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
-		< os-specific/mac/terminit > build/terminit
 	sed 's/\$$PREFIX/$(shell echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')/' \
+		< os-specific/mac/terminit > build/terminit
+	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
 		< os-specific/mac/launchterm > build/launchterm
 	install -m 755 "build/terminit" "$(PREFIX_DATA_ROOT)/MacOS"
 	install -m 755 "build/launchterm" "$(PREFIX_DATA_ROOT)/MacOS"
