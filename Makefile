@@ -53,9 +53,9 @@ CONFIG_SUB_URL		= "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain
 
 # Detemine what downloader to use
 ifneq (,$(DOWNLOADER))
-else ifneq (,$(shell wget -V))
+else ifneq (,$(shell wget -V 2>/dev/null))
 	DOWNLOADER = wget -O -
-else ifneq (,$(shell curl -V))
+else ifneq (,$(shell curl -V 2>/dev/null))
 	DOWNLOADER = curl -L
 else
 	$(error No downloader found. Please install wget or curl and re-run)
