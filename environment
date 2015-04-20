@@ -3,7 +3,11 @@ target=mipsel-pic32-elf-
 
 echo "$PATH" | grep "$TOOLCHAIN_INSTALL_DIR/bin" > /dev/null || export PATH="$PATH:$TOOLCHAIN_INSTALL_DIR/bin"
 
-[ "$TARGET" == "$target" ] || export PS1="[`printf '\033[32mPIC32 CROSS\033[0m'`] $PS1"
+if [ "`uname -s`" = "Darwin" ]; then
+	[ "$TARGET" == "$target" ] || export PS1="[`printf '\033[32mPIC32 CROSS\033[0m'`] $PS1"
+else
+	[ "$TARGET" == "$target" ] || export PS1="[PIC32 CROSS] $PS1"
+fi
 
 export TARGET="$target"
 export AR=${TARGET}ar
