@@ -1,0 +1,25 @@
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>pic32mx-toolchain-launch</string>
+	<key>CFBundleIdentifier</key>
+	<string>local.csc.pic32mx.toolchain</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>p32t</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.6</string>
+	<key>CFBundleName</key>
+	<string>p32mx-tc</string>
+	<key>CFBundleDisplayName</key>
+	<string>PIC32MX-Toolchain</string>
+	<key>CFBundleVersion</key>
+	<string>1231</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>CFBundleIconFile</key>
+	<string>toolchain</string>
+</dict>
+</plist>
