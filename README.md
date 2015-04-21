@@ -4,7 +4,7 @@
 ### Prerequisites
 Apart from the base system install, a number of additional packages are required to
 build the toolchain. Before you begin, run:
-`sudo apt-get install build-essential bison flex libtool texinfo`
+`sudo apt-get install build-essential bison flex libtool texinfo libz-dev`
 This should install all required packages.
 
 You will also need about 3 GB of available disk space. The compiled toolchain
@@ -38,7 +38,8 @@ the threads, which will bring down your system to the out of memory killer.
 
 After the build completes, the toolchain is installed on your system. To make
 a self extracting package suitable for binary distribution, run `make release`.
-A self extracting tarball will be placed in the root directory of the repository.
+A self extracting tarball will be placed in the root directory of the repository
+with the extension .run
 
 ### If a build fails
 If the build process is aborted while running, you may have the build tree in a bad
@@ -83,14 +84,19 @@ packages from the internet, hence a working internet connection is required.
 
 After the build completes, the toolchain is installed on your system. To make
 a self extracting package suitable for binary distribution, run `make release`.
-A self extracting tarball will be placed in the root directory of the repository.
-This self extracting tarball is to be run under MSYS2.
+A self extracting tarball will be placed in the root directory of the repository
+with the extension .run
+This self extracting tarball is to be run under MSYS2 as a shell script and will
+install the toolchain to the selected prefix.
 
 ### If a build fails
 If the build process is aborted while running, you may have the build tree in a bad
 state. It is recommended that you run `make clean`, remove the `downloads` directory
 and start over. If you know for certain that only a particular download failed,
 delete only the failed directory in the downloads directory.
+
+If make fails in 32 bit MSYS2: Close MSYS2 and run autorebase.bat in the MSYS2
+install directory.
 
 ### Optional: Pre-download the source code
 The source code can be downloaded prior to the building of the toolchain.
