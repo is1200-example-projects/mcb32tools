@@ -29,6 +29,7 @@
  *	Jun 30 2012 <Keith Vogel, Digilent> Created a flash header section
  *	Jun 30 2012 <Keith Vogel, Digilent> Created a RAM header section
  *      Apr 14 2015 <Axel Isaksson, Steven Arnow> Adapted for use with stand-alone gcc toolchain
+ *      Apr 21 2015 <Axel Isaksson>  Fixed broken data area allocation
  ************************************************************************
  */
 
@@ -608,6 +609,8 @@ SECTIONS
     . = ALIGN(4) ;
   } >kseg0_program_mem
 
+  _program_mem_end = .;
+
   .dbg_data ORIGIN(kseg1_data_mem) (NOLOAD) :
   {
     . += (DEFINED (_DEBUGGER) ? 0x200 : 0x0);
@@ -643,7 +646,7 @@ SECTIONS
    *  The best-fit allocator locates them, so that they may flow
    *  around absolute sections as needed.
    */
-  .data :
+  .data : AT(_program_mem_end)
   {
     _data_begin = . ;
     *( .gnu.linkonce.d.*)
@@ -651,39 +654,16 @@ SECTIONS
 
     *(.data1)
     . = ALIGN(4) ;
-  } >kseg1_data_mem
-
-  _data_image_begin = LOADADDR(.data) ;
-  . = .;
-  _gp = ALIGN(16) + 0x7ff0;
-
-  .got ALIGN(4)   :
-  {
-     *(.got.plt) *(.got)
-  } >kseg1_data_mem
-  /*
-   * We want the small data sections together, so single-instruction offsets
-   * can access them all, and initialized data all before uninitialized, so
-   * we can shorten the on-disk segment size.
-   */
-  .sdata ALIGN(4)   :
-  {
+    
     _sdata_begin = . ;
     *(.gnu.linkonce.s.*)
     . = ALIGN(4) ;
     _sdata_end = . ;
   } >kseg1_data_mem
 
-  .lit8           :
-  {
-    *(.lit8)
-    . = ALIGN(4) ;
-  } >kseg1_data_mem
-
-  .lit4           :
-  {
-    *(.lit4)
-  } >kseg1_data_mem 
+  _data_image_begin = LOADADDR(.data) ;
+  _gp = . ;
+  . = . + 0x20 ;
 
   . = ALIGN (4) ;
   _data_end = . ;
@@ -715,7 +695,7 @@ SECTIONS
   . = ALIGN(4) ;
   _end = . ;
   _bss_end = . ;
-
+  _heap = . ;
   /*
    *  The heap and stack are best-fit allocated by the linker after other
    *  data and bss sections have been allocated.
