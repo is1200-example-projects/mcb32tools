@@ -61,7 +61,7 @@ endif
 ifeq ($(shell uname -s),Darwin)
 	export PREFIX_DATA_ROOT = $(INSTALL_DIR)/Contents
 	export PREFIX = $(INSTALL_DIR)/Contents/Resources/Toolchain
-	EXTRA_INSTALL_TARGETS += install-mac-app
+	EXTRA_INSTALL_TARGETS += install-mac-app make-install
 else
 	export PREFIX = $(INSTALL_DIR)
 endif
@@ -112,8 +112,8 @@ endif
 
 .PHONY: all stage2 gcc gcc-install binutils binutils-install avrdude \
 	gmp mpc mpfr avrdude-install bin2hex bin2hex-install installdir \
-	make make-install \
-	processors runtime environment install clean
+	make make-install install-mac-app \
+	processors runtime environment install release clean
 
 all: installdir
 	+make stage2
@@ -156,7 +156,7 @@ avrdude-install: avrdude installdir
 
 build/make/config.status: downloads/$(BUILD_MAKE) | build build/config.sub build/config.guess
 	mkdir -p "$(@D)"
-	cp -f build/config.sub downloads/$(BUILD_MAKEA)/config.sub
+	cp -f build/config.sub downloads/$(BUILD_MAKE)/config.sub
 	cp -f build/config.guess downloads/$(BUILD_MAKE)/config.guess
 	(cd "$(@D)"; "../../downloads/$(BUILD_MAKE)/configure" $(CONFIG_MAKE))
 
@@ -216,8 +216,8 @@ mpc: build/mpc/config.status
 
 build/gcc/config.status: downloads/$(BUILD_GCC) binutils-install $(GCCDEPS) | build build/config.sub build/config.guess
 	mkdir -p "$(@D)"
-	#cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
-	#cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
+	cp -f build/config.sub downloads/$(BUILD_GCC)/config.sub
+	cp -f build/config.guess downloads/$(BUILD_GCC)/config.guess
 	(cd "$(@D)"; "../../downloads/$(BUILD_GCC)/configure" $(CONFIG_GCC))
 
 gcc: build/gcc/config.status
@@ -290,13 +290,14 @@ release:
 			"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
 else
 release:
+		rm -rf build/dmg
 		mkdir -p build/dmg
 		cp -r "$(INSTALL_DIR)" build/dmg/
 		ln -s /Applications/ build/dmg/
 		mkdir build/dmg/.meta
 		cp os-specific/mac/background.png build/dmg/.meta/
 		cp os-specific/mac/DS_Store build/dmg/.DS_Store
-		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -volname "PIC32 Toolchain" -srcfolder build/dmg
+		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -format UDBZ -volname "PIC32 Toolchain" -srcfolder build/dmg
 endif
 
 install-mac-app: installdir
