@@ -403,7 +403,9 @@ _bev_exception:
         # General Exception Vector Handler
         # Jumps to _general_exception_handler
         ##################################################################
-        
+
+/* This has been moved to vectors.S in every program codebase */
+#if 0 
 #if defined(USE_OLD_DOTSECTION)
         .section .gen_handler,"ax",@progbits
 #else
@@ -418,7 +420,7 @@ _gen_exception:
         nop
 
         .end _gen_exception
-
+#endif
 
         .text
         .ent _main_entry
