@@ -41,9 +41,9 @@
  *************************************************************************/
 PROVIDE(_vector_spacing = 0x00000001);
 
-INPUT("crtbegin.o")
-INPUT("crtend.o")
-INPUT("crtn.o")
+/*INPUT("crtbegin.o")*/
+/*INPUT("crtend.o")*/
+/*INPUT("crtn.o")*/
 
 /*************************************************************************
  * Configuration-word sections. Map the config-pragma input sections to

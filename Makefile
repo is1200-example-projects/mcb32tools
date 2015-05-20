@@ -231,7 +231,6 @@ gcc-install: gcc installdir
 processors: binutils-install | build
 	mkdir -p build/lib/proc
 	mkdir -p build/include
-	+make -C "processors"
 	cp linkscripts/*.ld build/lib/proc/
 	cp -r headers/* build/include/
 
