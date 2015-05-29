@@ -663,7 +663,7 @@ SECTIONS
 
   _data_image_begin = LOADADDR(.data) ;
   _gp = . ;
-  . = . + 0x20 ;
+/*  . = . + 0x20 ;*/
 
   . = ALIGN (4) ;
   _data_end = . ;
