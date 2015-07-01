@@ -1,5 +1,5 @@
 Begin3
-Title:          pic32-toolchain
+Title:          mbc32tools
 Version:        1.0
 Description:    Cross compiling toolchain for Microchip Pic32 devices.
 		Contains gcc, binutils, a couple of other tools, as well
@@ -7,7 +7,7 @@ Description:    Cross compiling toolchain for Microchip Pic32 devices.
 Keywords:       pic32 toolchain cross-compiler gcc
 Author:         Several authors
 Maintained-by:  Axel Isaksson (axelis@kth.se), Steven Arnow (stevena@kth.se)
-Original-site:  https://github.com/is1200-example-projects/pic32-toolchain
+Original-site:  https://github.com/is1200-example-projects/mcb32tools
 Platform:       Unix
 Copying-policy: GPL
 End

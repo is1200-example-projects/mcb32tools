@@ -1,10 +1,10 @@
 export TARGET	= mipsel-pic32-elf
 ifneq ($(shell uname -s),Darwin)
 	# This defines install location for platforms that are *not* MacOS X
-	export INSTALL_DIR	= /opt/pic32-toolchain
+	export INSTALL_DIR	= /opt/mcb32tools
 else
 	# This defines where the application bundle will be built in MacOS X
-	export INSTALL_DIR	= /Applications/pic32-toolchain.app
+	export INSTALL_DIR	= /Applications/mcb32tools.app
 endif
 
 # Build GCC against static GMP, MPFR, MPC
@@ -271,6 +271,7 @@ install: installdir processors environment
 	(cd build; find include/proc -type f -exec install -m 644 {} "$(PREFIX)/include/proc" \;)
 	(cd build; find include/sys -type f -exec install -m 644 {} "$(PREFIX)/include/sys" \;)
 	install -m 644 "build/include/cp0defs.h" "$(PREFIX)/include"
+	install -m 644 "build/include/pic32mx.h" "$(PREFIX)/include"
 	(cd build; find lib -type f -exec install -m 644 {} "$(PREFIX)/lib/proc" \;)
 	install -m 644 build/environment "$(PREFIX)/environment"
 	sed 's/\$$PREFIX/$(shell echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')/' \
@@ -285,8 +286,8 @@ distrib-linux:
 ifneq ($(shell uname -s),Darwin)
 release:
 		## We're NOT building on OSX
-		makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/pic32-toolchain.lsm \
-			"$(PREFIX)" "pic32-toolchain-$(shell build/config.guess).run" "PIC32 Toolchain" ./install-complete
+		makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/mcb32tools.lsm \
+			"$(PREFIX)" "mcb32tools-$(shell build/config.guess).run" "MCB32 Tools" ./install-complete
 else
 release:
 		rm -rf build/dmg
@@ -296,7 +297,7 @@ release:
 		mkdir build/dmg/.meta
 		cp os-specific/mac/background.png build/dmg/.meta/
 		cp os-specific/mac/DS_Store build/dmg/.DS_Store
-		hdiutil create "pic32-toolchain-$(shell build/config.guess).dmg" -format UDBZ -volname "PIC32 Toolchain" -srcfolder build/dmg
+		hdiutil create "mcb32tools-$(shell build/config.guess).dmg" -format UDBZ -volname "MCB32 Tools" -srcfolder build/dmg
 endif
 
 install-mac-app: installdir

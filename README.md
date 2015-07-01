@@ -14,7 +14,7 @@ will use about 250 MB of space in the installation directory.
 First, you need to configure the target installation directory of the toolchain.
 Since GCC and many other programs hard-code their installation location, choose wisely,
 as any binary distribution will need to be unpacked in the exact same path.
-The path name `/opt/pic32-toolchain` is suggested. This path is configured using
+The path name `/opt/mcb32tools` is suggested. This path is configured using
 the `INSTALL_DIR` variable. The `INSTALL_DIR` variable declaration can be found at the top of the
 root makefile, located at the root of this repository.
 
@@ -32,9 +32,9 @@ It is recommended that you build with at least as many threads as your CPU suppo
 hardware, but at most 50% more. Otherwise it may take a long time or your system may
 become overloaded. If you have 4 hardware threads, run make with `make -j6`, this will
 use 6 threads to compensate for I/O wait. If you build on an SSD or RAM disk, 
-4 threads may be enough. Also note that there is no space between `-j`
-and the number. Insering a space inbetween will build with **all**
-the threads, which will bring down your system to the out of memory killer.
+4 threads may be enough. Don't provide the `-j` withough an argument, as this will build with
+unlimited threading. With a large build like this toolchain, your system will be unusable for some time
+and the build will probably fail.
 
 After the build completes, the toolchain is installed on your system. To make
 a self extracting package suitable for binary distribution, run `make release`.
@@ -63,17 +63,17 @@ by running the following command in the msys shell:
 
 ### Downloading the source code
 Download the toolchain source code and cd to its directory:
- - `git clone https://github.com/is1200-example-projects/pic32-toolchain.git`
- - `cd pic32-toolchain`
+ - `git clone https://github.com/is1200-example-projects/mcb32tools.git`
+ - `cd mcb32tools`
 
 ### Starting the build process
 Determine the prefix to use for the toolchain. This path is hard-coded into
 the binaries, and is the path used in the final toolchain distribution.
-The default and recommended is to use `/opt/pic32-toolchain` . To change
+The default and recommended is to use `/opt/mcb32tools` . To change
 this, edit the `INSTALL_DIR` variable at the top of the Makefile.
 
 The prefix directory must be created manually before the build can start.
-If your prefix is the default one, use the command `mkdir /opt/pic32-toolchain`
+If your prefix is the default one, use the command `mkdir /opt/mcb32tools`
 
 To start building the toolchain, issue the command `make` .
 For faster building on a multi-core machine, the command `make -j8`
@@ -118,7 +118,7 @@ You will also need about 3 GB of available disk space.
 ### Starting the build process
 First, you may configure the file name of the app by setting the `INSTALL_DIR`
 variable at the top of the root makefile, the variable specific for Mac OS 
-(as indicated by comments.) A default of `/Applications/pic32-toolchain.app` is used,
+(as indicated by comments.) A default of `/Applications/mcb32tools.app` is used,
 and it is recommended that it is not changed.
 
 Before starting the building process, you need to create the install directory first.

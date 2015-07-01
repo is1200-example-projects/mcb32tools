@@ -4,17 +4,17 @@
 	<key>CFBundleExecutable</key>
 	<string>pic32-toolchain-launch</string>
 	<key>CFBundleIdentifier</key>
-	<string>local.csc.pic32mx.toolchain</string>
+	<string>local.scs.mcb32tools</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
-	<string>p32t</string>
+	<string>m32t</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.6</string>
 	<key>CFBundleName</key>
-	<string>p32mx-tc</string>
+	<string>mcb32</string>
 	<key>CFBundleDisplayName</key>
-	<string>PIC32 Toolchain</string>
+	<string>MCB32 Tools</string>
 	<key>CFBundleVersion</key>
 	<string>1231</string>
 	<key>NSPrincipalClass</key>
