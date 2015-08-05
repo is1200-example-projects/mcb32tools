@@ -1,4 +1,4 @@
-export TARGET	= mipsel-pic32-elf
+export TARGET	= mipsel-mcb32-elf
 ifneq ($(shell uname -s),Darwin)
 	# This defines install location for platforms that are *not* MacOS X
 	export INSTALL_DIR	= /opt/mcb32tools
@@ -306,8 +306,8 @@ install-mac-app: installdir
 	iconutil -o "$(PREFIX_DATA_ROOT)/Resources/toolchain.icns" -c icns "os-specific/mac/toolchain.iconset"
 	@## TODO: Set the path correctly in launchterm
 	sed 's/\$$PREFIX_DATA_ROOT/$(shell echo '$(PREFIX_DATA_ROOT)' | sed -e 's/[\/&]/\\&/g')/' \
-		< os-specific/mac/pic32-toolchain-launch.c > build/pic32-toolchain-launch.c
-	$(CC) -DMAC_APP_PATH=\"$(INSTALL_DIR)\" "build/pic32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/pic32-toolchain-launch"
+		< os-specific/mac/mcb32-toolchain-launch.c > build/mcb32-toolchain-launch.c
+	$(CC) -DMAC_APP_PATH=\"$(INSTALL_DIR)\" "build/mcb32-toolchain-launch.c" -o "$(PREFIX_DATA_ROOT)/MacOS/mcb32-toolchain-launch"
 	install -d "$(PREFIX_DATA_ROOT)/Resources/en.lproj"
 
 clean:
