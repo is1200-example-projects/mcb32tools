@@ -20,6 +20,8 @@ export BUILD_MPFR	= mpfr-3.1.2
 export BUILD_GMP	= gmp-6.0.0
 export BUILD_MAKE	= make-4.1
 
+export MAKESELF	= makeself-2.2.0
+
 # These are the URLs we should download from
 URLS 		= \
 	http://download.savannah.gnu.org/releases/avrdude/$(BUILD_AVRDUDE).tar.gz \
@@ -286,10 +288,12 @@ distrib-linux:
 ifneq ($(shell uname -s),Darwin)
 release:
 		## We're NOT building on OSX
-		makeself-2.2.0/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/mcb32tools.lsm \
+		sed 's/^umask [0-7]*$$/umask 022/' < $(MAKESELF)/makeself-header.sh > build/makeself-header.sh
+		$(MAKESELF)/makeself.sh --bzip2 --target "$(PREFIX)" --lsm os-specific/mcb32tools.lsm --header build/makeself-header.sh \
 			"$(PREFIX)" "mcb32tools-$(shell build/config.guess).run" "MCB32 Tools" ./install-complete
 else
 release:
+		## We are building on OSX
 		rm -rf build/dmg
 		mkdir -p build/dmg
 		cp -r "$(INSTALL_DIR)" build/dmg/
