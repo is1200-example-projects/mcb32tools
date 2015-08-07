@@ -2,7 +2,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>pic32-toolchain-launch</string>
+	<string>mcb32tools-launch</string>
 	<key>CFBundleIdentifier</key>
 	<string>local.scs.mcb32tools</string>
 	<key>CFBundlePackageType</key>
@@ -14,7 +14,7 @@
 	<key>CFBundleName</key>
 	<string>mcb32</string>
 	<key>CFBundleDisplayName</key>
-	<string>MCB32 Tools</string>
+	<string>MCB32Tools</string>
 	<key>CFBundleVersion</key>
 	<string>1231</string>
 	<key>NSPrincipalClass</key>
