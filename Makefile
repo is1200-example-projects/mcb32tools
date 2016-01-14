@@ -19,6 +19,7 @@ export BUILD_MPC	= mpc-1.0.3
 export BUILD_MPFR	= mpfr-3.1.2
 export BUILD_GMP	= gmp-6.0.0
 export BUILD_MAKE	= make-4.1
+export BUILD_LIBC	= mcb32libc-0.1
 
 export MAKESELF	= makeself-2.2.0
 
@@ -30,7 +31,8 @@ URLS 		= \
 	http://ftp.gnu.org/gnu/mpc/$(BUILD_MPC).tar.gz \
 	http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP)a.tar.bz2 \
 	http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2 \
-	http://ftp.gnu.org/gnu/make/$(BUILD_MAKE).tar.bz2
+	http://ftp.gnu.org/gnu/make/$(BUILD_MAKE).tar.bz2 \
+	https://github.com/is1200-example-projects/mcb32libc/releases/download/v0.1/$(BUILD_LIBC).tar.gz
 
 # Packages that should be downloaded
 DOWNLOADS	= \
@@ -40,7 +42,8 @@ DOWNLOADS	= \
 	downloads/$(BUILD_MPC) \
 	downloads/$(BUILD_MPFR) \
 	downloads/$(BUILD_GMP) \
-	downloads/$(BUILD_MAKE)
+	downloads/$(BUILD_MAKE) \
+	downloads/$(BUILD_LIBC)
 
 # Tar flags for different archive formats
 TARFORMATS = z.gz j.bz2 J.xz
@@ -114,14 +117,14 @@ endif
 
 .PHONY: all stage2 gcc gcc-install binutils binutils-install avrdude \
 	gmp mpc mpfr avrdude-install bin2hex bin2hex-install installdir \
-	make make-install install-mac-app \
+	make make-install install-mac-app mcb32libc mcb32libc-install \
 	processors runtime environment install release clean
 
 all: installdir
 	+make stage2
 
 stage2: binutils-install gcc-install avrdude-install bin2hex-install \
-	install runtime-install $(EXTRA_INSTALL_TARGETS)
+	install runtime-install mcb32libc-install $(EXTRA_INSTALL_TARGETS)
 	@echo Done.
 
 
@@ -243,6 +246,30 @@ runtime: binutils-install gcc-install processors | build
 runtime-install: installdir runtime
 	+make -C "runtime/crt0" install
 	+make -C "runtime/crtprep" install
+
+mcb32libc: downloads/$(BUILD_LIBC) gcc-install environment | build
+	mkdir -p build/mcb32libc
+	
+	+AR=$(PREFIX)/bin/$(TARGET)-ar \
+		AS=$(PREFIX)/bin/$(TARGET)-as \
+		CC=$(PREFIX)/bin/$(TARGET)-gcc \
+		CXX=$(PREFIX)/bin/$(TARGET)-g++ \
+		CPP=$(PREFIX)/bin/$(TARGET)-cpp \
+		C_INCLUDE_PATH=$(PREFIX)/include \
+		CFLAGS="-march=mips32r2 -msoft-float -Wa,-msoft-float -G 0" \
+		ASFLAGS="-march=mips32r2 -msoft-float" \
+		make -C "downloads/$(BUILD_LIBC)" BUILDDIR=../../build/mcb32libc STDIO=0
+
+mcb32libc-install: installdir mcb32libc
+	install -m 644 "build/mcb32libc/libc.a" "$(PREFIX)/lib/libc.a"
+	install -m 644 "build/mcb32libc/libm.a" "$(PREFIX)/lib/libm.a"
+	install -d "$(PREFIX)/include/sys"
+	install -d "$(PREFIX)/include/klibc"
+	install -d "$(PREFIX)/include/machine"
+	(cd downloads/$(BUILD_LIBC); find include -maxdepth 1 -type f -exec install -m 644 {} "$(PREFIX)/include" \;)
+	(cd downloads/$(BUILD_LIBC); find include/machine -maxdepth 1 -type f -exec install -m 644 {} "$(PREFIX)/include/machine" \;)
+	(cd downloads/$(BUILD_LIBC); find include/sys -maxdepth 1 -type f -exec install -m 644 {} "$(PREFIX)/include/sys" \;)
+	(cd downloads/$(BUILD_LIBC); find include/klibc -maxdepth 1 -type f -exec install -m 644 {} "$(PREFIX)/include/klibc" \;)
 
 environment: build
 	sed "s/TOOLCHAIN_INSTALL_DIR=.*$$/TOOLCHAIN_INSTALL_DIR="$$(echo '$(PREFIX)' | sed -e 's/[\/&]/\\&/g')"/"\
