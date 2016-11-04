@@ -116,7 +116,7 @@
 #ifdef __ASSEMBLER__
 #define PIC32_R(a)		(0xBF800000 + (a))
 #else
-#define PIC32_R(a)		*(volatile unsigned*)(0xBF800000 + (a))
+#define PIC32_R(a)		(*(volatile unsigned*)(0xBF800000 + (a)))
 #endif
 /*--------------------------------------
  * UART registers.
@@ -1053,17 +1053,62 @@
  * Timer2 registers
  */
 #define T2CON 		PIC32_R (0x0800)
+#define T2CONCLR 	PIC32_R (0x0804)
 #define T2CONSET 	PIC32_R (0x0808)
 #define TMR2  		PIC32_R (0x0810)
 #define PR2   		PIC32_R (0x0820)
 
 /*
+ * Timer3 registers
+ */
+#define T3CON 		PIC32_R (0x0a00)
+#define T3CONCLR 	PIC32_R (0x0a04)
+#define T3CONSET 	PIC32_R (0x0a08)
+#define TMR3  		PIC32_R (0x0a10)
+#define PR3   		PIC32_R (0x0a20)
+
+/*
+ * Timer4 registers
+ */
+#define T4CON 		PIC32_R (0x0c00)
+#define T4CONCLR 	PIC32_R (0x0c04)
+#define T4CONSET 	PIC32_R (0x0c08)
+#define TMR4  		PIC32_R (0x0c10)
+#define PR4   		PIC32_R (0x0c20)
+
+/*
+ * Timer5 registers
+ */
+#define T5CON 		PIC32_R (0x0e00)
+#define T5CONCLR 	PIC32_R (0x0e04)
+#define T5CONSET 	PIC32_R (0x0e08)
+#define TMR5  		PIC32_R (0x0e10)
+#define PR5   		PIC32_R (0x0e20)
+
+/*
  * Output compare registers
  */
 #define OC1CON		PIC32_R (0x3000)
+#define OC1CONCLR       PIC32_R (0x3004)
+#define OC1CONSET       PIC32_R (0x3008)
 #define OC1R		PIC32_R (0x3010)
 #define OC1RS		PIC32_R (0x3020)
+
+#define OC2CON		PIC32_R (0x3200)
+#define OC2CONCLR       PIC32_R (0x3204)
+#define OC2CONSET       PIC32_R (0x3208)
+#define OC2R		PIC32_R (0x3210)
+#define OC2RS		PIC32_R (0x3220)
+
+#define OC3CON		PIC32_R (0x3400)
+#define OC3CONCLR       PIC32_R (0x3404)
+#define OC3CONSET       PIC32_R (0x3408)
+#define OC3R		PIC32_R (0x3410)
+#define OC3RS		PIC32_R (0x3420)
+
 #define OC4CON   	PIC32_R (0x3600)
+#define OC4CONCLR   	PIC32_R (0x3604)
+#define OC4CONSET   	PIC32_R (0x3608)
 #define OC4R		PIC32_R (0x3610)
 #define OC4RS		PIC32_R (0x3620)
 
