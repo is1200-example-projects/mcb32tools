@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2010 Serge Vakulenko, <serge@vak.ru>
  * Modified 2015 by Axel Isaksson - Added I2C registers
+ * Modified 2016 by Axel Isaksson - Added More timer and SPI registers
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -136,22 +137,6 @@
 #define U1BRGSET	PIC32_R (0x6048)
 #define U1BRGINV	PIC32_R (0x604C)
 
-#ifdef PIC32MX4
-#define U2MODE		PIC32_R (0x6200) /* Mode */
-#define U2MODECLR	PIC32_R (0x6204)
-#define U2MODESET	PIC32_R (0x6208)
-#define U2MODEINV	PIC32_R (0x620C)
-#define U2STA		PIC32_R (0x6210) /* Status and control */
-#define U2STACLR	PIC32_R (0x6214)
-#define U2STASET	PIC32_R (0x6218)
-#define U2STAINV	PIC32_R (0x621C)
-#define U2TXREG		PIC32_R (0x6220) /* Transmit */
-#define U2RXREG		PIC32_R (0x6230) /* Receive */
-#define U2BRG		PIC32_R (0x6240) /* Baud rate */
-#define U2BRGCLR	PIC32_R (0x6244)
-#define U2BRGSET	PIC32_R (0x6248)
-#define U2BRGINV	PIC32_R (0x624C)
-#endif
 #ifdef PIC32MX7
 #define U4MODE		PIC32_R (0x6200) /* Mode */
 #define U4MODECLR	PIC32_R (0x6204)
@@ -227,6 +212,21 @@
 #define U5BRGCLR	PIC32_R (0x6A44)
 #define U5BRGSET	PIC32_R (0x6A48)
 #define U5BRGINV	PIC32_R (0x6A4C)
+#else
+#define U2MODE		PIC32_R (0x6200) /* Mode */
+#define U2MODECLR	PIC32_R (0x6204)
+#define U2MODESET	PIC32_R (0x6208)
+#define U2MODEINV	PIC32_R (0x620C)
+#define U2STA		PIC32_R (0x6210) /* Status and control */
+#define U2STACLR	PIC32_R (0x6214)
+#define U2STASET	PIC32_R (0x6218)
+#define U2STAINV	PIC32_R (0x621C)
+#define U2TXREG		PIC32_R (0x6220) /* Transmit */
+#define U2RXREG		PIC32_R (0x6230) /* Receive */
+#define U2BRG		PIC32_R (0x6240) /* Baud rate */
+#define U2BRGCLR	PIC32_R (0x6244)
+#define U2BRGSET	PIC32_R (0x6248)
+#define U2BRGINV	PIC32_R (0x624C)
 #endif
 
 /*
@@ -464,6 +464,30 @@
 #define ADC1BUFD	PIC32_R (0x9140)
 #define ADC1BUFE	PIC32_R (0x9150)
 #define ADC1BUFF	PIC32_R (0x9160)
+
+/*--------------------------------------
+ * Comparator registers.
+ */
+
+#define CM1CON  	PIC32_R (0xA000)
+#define CM1CONCLR	PIC32_R (0xA004)
+#define CM1CONSET	PIC32_R (0xA008)
+#define CM1CONINV	PIC32_R (0xA00C)
+
+#define CM2CON  	PIC32_R (0xA010)
+#define CM2CONCLR	PIC32_R (0xA014)
+#define CM2CONSET	PIC32_R (0xA018)
+#define CM2CONINV	PIC32_R (0xA01C)
+
+#define CMSTAT  	PIC32_R (0xA060)
+#define CMSTATCLR	PIC32_R (0xA064)
+#define CMSTATSET	PIC32_R (0xA068)
+#define CMSTATINV	PIC32_R (0xA06C)
+
+#define CVRCON  	PIC32_R (0x9800)
+#define CVRCONCLR	PIC32_R (0x9804)
+#define CVRCONSET	PIC32_R (0x9808)
+#define CVRCONINV	PIC32_R (0x980C)
 
 /*--------------------------------------
  * Parallel master port registers.
@@ -731,21 +755,6 @@
 /*--------------------------------------
  * SPI registers.
  */
-#ifdef PIC32MX4
-#define SPI1CON		PIC32_R (0x5800) /* Control */
-#define SPI1CONCLR	PIC32_R (0x5804)
-#define SPI1CONSET	PIC32_R (0x5808)
-#define SPI1CONINV	PIC32_R (0x580C)
-#define SPI1STAT	PIC32_R (0x5810) /* Status */
-#define SPI1STATCLR	PIC32_R (0x5814)
-#define SPI1STATSET	PIC32_R (0x5818)
-#define SPI1STATINV	PIC32_R (0x581C)
-#define SPI1BUF		PIC32_R (0x5820) /* Transmit and receive buffer */
-#define SPI1BRG		PIC32_R (0x5830) /* Baud rate generator */
-#define SPI1BRGCLR	PIC32_R (0x5834)
-#define SPI1BRGSET	PIC32_R (0x5838)
-#define SPI1BRGINV	PIC32_R (0x583C)
-#endif
 #ifdef PIC32MX7
 #define SPI3CON		PIC32_R (0x5800) /* Control */
 #define SPI3CONCLR	PIC32_R (0x5804)
@@ -788,6 +797,20 @@
 #define SPI1BRGCLR	PIC32_R (0x5E34)
 #define SPI1BRGSET	PIC32_R (0x5E38)
 #define SPI1BRGINV	PIC32_R (0x5E3C)
+#else
+#define SPI1CON		PIC32_R (0x5800) /* Control */
+#define SPI1CONCLR	PIC32_R (0x5804)
+#define SPI1CONSET	PIC32_R (0x5808)
+#define SPI1CONINV	PIC32_R (0x580C)
+#define SPI1STAT	PIC32_R (0x5810) /* Status */
+#define SPI1STATCLR	PIC32_R (0x5814)
+#define SPI1STATSET	PIC32_R (0x5818)
+#define SPI1STATINV	PIC32_R (0x581C)
+#define SPI1BUF		PIC32_R (0x5820) /* Transmit and receive buffer */
+#define SPI1BRG		PIC32_R (0x5830) /* Baud rate generator */
+#define SPI1BRGCLR	PIC32_R (0x5834)
+#define SPI1BRGSET	PIC32_R (0x5838)
+#define SPI1BRGINV	PIC32_R (0x583C)
 #endif
 
 #define SPI2CON		PIC32_R (0x5A00) /* Control */
@@ -1048,6 +1071,14 @@
 #define PIC32_NVMCON_WREN       0x00004000
 #define PIC32_NVMCON_WR         0x00008000
 
+/*
+ * Timer1 registers
+ */
+#define T1CON 		PIC32_R (0x0600)
+#define T1CONCLR 	PIC32_R (0x0604)
+#define T1CONSET 	PIC32_R (0x0608)
+#define TMR1		PIC32_R (0x0610)
+#define PR1  		PIC32_R (0x0620)
 
 /*
  * Timer2 registers
@@ -1111,6 +1142,42 @@
 #define OC4CONSET   	PIC32_R (0x3608)
 #define OC4R		PIC32_R (0x3610)
 #define OC4RS		PIC32_R (0x3620)
+
+#define OC5CON   	PIC32_R (0x3800)
+#define OC5CONCLR   	PIC32_R (0x3804)
+#define OC5CONSET   	PIC32_R (0x3808)
+#define OC5R		PIC32_R (0x3810)
+#define OC5RS		PIC32_R (0x3820)
+
+
+/*
+ * Input capture registers
+ */
+
+#define IC1CON   	PIC32_R (0x2000)
+#define IC1CONCLR   	PIC32_R (0x2004)
+#define IC1CONSET   	PIC32_R (0x2008)
+#define IC1BUF		PIC32_R (0x2010)
+
+#define IC2CON   	PIC32_R (0x2200)
+#define IC2CONCLR   	PIC32_R (0x2204)
+#define IC2CONSET   	PIC32_R (0x2208)
+#define IC2BUF		PIC32_R (0x2210)
+
+#define IC3CON   	PIC32_R (0x2400)
+#define IC3CONCLR   	PIC32_R (0x2404)
+#define IC3CONSET   	PIC32_R (0x2408)
+#define IC3BUF		PIC32_R (0x2410)
+
+#define IC4CON   	PIC32_R (0x2600)
+#define IC4CONCLR   	PIC32_R (0x2604)
+#define IC4CONSET   	PIC32_R (0x2608)
+#define IC4BUF		PIC32_R (0x2610)
+
+#define IC5CON   	PIC32_R (0x2800)
+#define IC5CONCLR   	PIC32_R (0x2804)
+#define IC5CONSET   	PIC32_R (0x2808)
+#define IC5BUF		PIC32_R (0x2810)
 
 #define BLRKEY      *(volatile unsigned*)(0x80000000)
 
