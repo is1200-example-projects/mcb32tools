@@ -4,7 +4,7 @@
 ### Prerequisites
 Apart from the base system install, a number of additional packages are required to
 build the toolchain. Before you begin, run:
-`sudo apt-get install build-essential bison flex libtool texinfo libz-dev m4`
+`sudo apt-get install build-essential bison flex libtool texinfo libz-dev m4 libftdi-dev`
 This should install all required packages.
 
 You will also need about 3 GB of available disk space. The compiled toolchain
