@@ -34,3 +34,4 @@ Select the target pic32 device.
 For Uno32, select PIC32MX320F128H and for the uC32, PIC32MX340F512H. 
 Browse for the hex-file with
 the bootloader and click the "Program" button.
+A useful guide  is the following: https://chipkit.net/wp-content/uploads/2016/02/Restore-your-chipKIT-Bootloader-Guide.pdf
