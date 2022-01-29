@@ -8,7 +8,7 @@ build the toolchain. Before you begin, run:
 This should install all required packages.
 
 You will also need about 3 GB of available disk space. The compiled toolchain
-will use about 250 MB of space in the installation directory.
+will use about 300 MB of space in the installation directory.
 
 ### Starting the build process
 First, you need to configure the target installation directory of the toolchain.
@@ -19,7 +19,7 @@ the `INSTALL_DIR` variable. The `INSTALL_DIR` variable declaration can be found 
 root makefile, located at the root of this repository.
 
 Before you can start building the toolchain, you need to create this directory and make
-sure it's writable. Do this with `sudo mkdir -p <install path>` and 
+sure it's writable. Do this with `sudo mkdir -p <install path>` and
 `sudo chown <your user> <install path>`.
 
 When you've done that, cd into the toolchain repository and run `make`.
@@ -31,7 +31,7 @@ commands to fix the problem.
 It is recommended that you build with at least as many threads as your CPU supports in
 hardware, but at most 50% more. Otherwise it may take a long time or your system may
 become overloaded. If you have 4 hardware threads, run make with `make -j6`, this will
-use 6 threads to compensate for I/O wait. If you build on an SSD or RAM disk, 
+use 6 threads to compensate for I/O wait. If you build on an SSD or RAM disk,
 4 threads may be enough. Don't provide the `-j` withough an argument, as this will build with
 unlimited threading. With a large build like this toolchain, your system will be unusable for some time
 and the build will probably fail.
@@ -117,7 +117,7 @@ You will also need about 3 GB of available disk space.
 
 ### Starting the build process
 First, you may configure the file name of the app by setting the `INSTALL_DIR`
-variable at the top of the root makefile, the variable specific for Mac OS 
+variable at the top of the root makefile, the variable specific for Mac OS
 (as indicated by comments.) A default of `/Applications/mcb32tools.app` is used,
 and it is recommended that it is not changed.
 
@@ -141,11 +141,3 @@ Applications folder. For making a release suitable for distribution, run
 `make release` and a disk image with the app will be created in the root directory
 of the repo.
 
-
-## Currently implemented hacks
-### libgmp
-At the time this toolchain was pieced together, the latest version available
-was 6.0.0a, it does however extract to 6.0.0. As a crude hack, an "a" is appended to the
-URL in the list of URLs. If you wish to update the version of libgmp, you probably
-need to remove this stray 'a'. You can find the list of URLs near the top of the
-root makefile.
