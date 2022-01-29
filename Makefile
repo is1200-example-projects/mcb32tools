@@ -12,13 +12,13 @@ STATIC			= true
 
 # Versions
 export BUILD_AVRDUDE	= avrdude-5.11
-export BUILD_BINUTILS	= binutils-2.25
-export BUILD_GCC	= gcc-4.9.2
+export BUILD_BINUTILS	= binutils-2.36
+export BUILD_GCC	= gcc-10.2.0
 export BUILD_BIN2HEX	= bin2hex
-export BUILD_MPC	= mpc-1.0.3
-export BUILD_MPFR	= mpfr-3.1.2
-export BUILD_GMP	= gmp-6.0.0
-export BUILD_MAKE	= make-4.1
+export BUILD_MPC	= mpc-1.2.1
+export BUILD_MPFR	= mpfr-4.1.0
+export BUILD_GMP	= gmp-6.2.1
+export BUILD_MAKE	= make-4.3
 export BUILD_LIBC	= mcb32libc-0.1
 
 export MAKESELF	= makeself-2.2.0
@@ -27,11 +27,11 @@ export MAKESELF	= makeself-2.2.0
 URLS 		= \
 	http://download.savannah.gnu.org/releases/avrdude/$(BUILD_AVRDUDE).tar.gz \
 	http://ftp.gnu.org/gnu/binutils/$(BUILD_BINUTILS).tar.bz2 \
-	http://ftp.gnu.org/gnu/gcc/$(BUILD_GCC)/$(BUILD_GCC).tar.bz2 \
+	http://ftp.gnu.org/gnu/gcc/$(BUILD_GCC)/$(BUILD_GCC).tar.gz \
 	http://ftp.gnu.org/gnu/mpc/$(BUILD_MPC).tar.gz \
-	http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP)a.tar.bz2 \
+	http://ftp.gnu.org/gnu/gmp/$(BUILD_GMP).tar.bz2 \
 	http://ftp.gnu.org/gnu/mpfr/$(BUILD_MPFR).tar.bz2 \
-	http://ftp.gnu.org/gnu/make/$(BUILD_MAKE).tar.bz2 \
+	http://ftp.gnu.org/gnu/make/$(BUILD_MAKE).tar.gz \
 	https://github.com/is1200-example-projects/mcb32libc/releases/download/v0.1/$(BUILD_LIBC).tar.gz
 
 # Packages that should be downloaded
@@ -242,14 +242,14 @@ processors: binutils-install | build
 runtime: binutils-install gcc-install processors | build
 	+make -C "runtime/crt0"
 	+make -C "runtime/crtprep"
-	
+
 runtime-install: installdir runtime
 	+make -C "runtime/crt0" install
 	+make -C "runtime/crtprep" install
 
 mcb32libc: downloads/$(BUILD_LIBC) gcc-install environment | build
 	mkdir -p build/mcb32libc
-	
+
 	+AR=$(PREFIX)/bin/$(TARGET)-ar \
 		AS=$(PREFIX)/bin/$(TARGET)-as \
 		CC=$(PREFIX)/bin/$(TARGET)-gcc \
@@ -344,3 +344,4 @@ install-mac-app: installdir
 clean:
 	$(RM) -R "build"
 	@echo Done.
+

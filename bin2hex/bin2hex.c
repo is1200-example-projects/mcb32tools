@@ -205,7 +205,7 @@ write_hex_file (char *name, bfd *abfd)
       printf ("Error: could not open file %s for writing!\n", name);
       return 1;
     }
-  
+
   if (verbose)
     {
       printf ("writing %s\n\n", name);
@@ -355,8 +355,7 @@ write_section (bfd *abfd, asection *sect, PTR fp)
   hexfile = fp;
   p = &dat[0];
   offset = 0;
-  total = (unsigned long) bfd_section_size (abfd, sect)
-        / bfd_octets_per_byte (abfd);
+  total = (unsigned long) bfd_section_size (sect) / bfd_octets_per_byte(abfd, sect);
 
   /* if section is load-able and has contents */
   if ((sect->flags & SEC_LOAD) &&
@@ -430,7 +429,7 @@ write_section (bfd *abfd, asection *sect, PTR fp)
           }
         /* add checksum */
         fprintf (hexfile, "%2.2x\n", (unsigned char) sum);
-      }    
+      }
     }
 }
 
@@ -447,5 +446,4 @@ write_extended_address_record (file_ptr base_address, PTR fp)
   sum -= (2 + 0 + 4 + (upper_addr >> 8) + (upper_addr & 0xFF));
   fprintf (hexfile, ":02000004%4.4x%2.2x\n", upper_addr, (unsigned char) sum);
 }
-
 
